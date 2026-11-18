@@ -2,6 +2,6 @@
   "name": "sunrise-group",
   "private": true,
   "scripts": {
-    "deploy": "npx --yes cf@1.0.0-beta.13 deploy ./public"
+    "deploy": "npx --yes cf@1.0.0-rc.1 deploy ./public --force"
   }
 }
