@@ -2,6 +2,7 @@
   "name": "sunrise-group",
   "private": true,
   "scripts": {
+    "predeploy": "node -e \"const h=require('node:fs').readFileSync('public/index.html','utf8');if(!/^\\s*<!doctype html>/i.test(h)||!/<\\/html>\\s*$/i.test(h)){console.error('Invalid website entry: expected complete HTML document');process.exit(1)};console.log('Website entry validated')\"",
     "deploy": "npx --yes cf@1.0.0-rc.1 deploy ./public --force"
   }
 }
