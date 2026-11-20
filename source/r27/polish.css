@@ -21,7 +21,6 @@
 .catalog-line-meta{min-width:0}
 .r07-search-row input{border-radius:5px}
 .r07-search-row input:focus-visible{outline-offset:2px}
-.r27-download-note{display:block;flex-basis:100%;order:9;font-size:12px;line-height:1.6;max-width:100%;color:inherit;opacity:.9}
 .project-actions .button{max-width:100%;white-space:normal;text-align:center;justify-content:center;min-height:44px}
 .footer-top nav a{display:inline-flex;align-items:center;min-height:36px}
 @media(max-width:760px){
@@ -32,7 +31,6 @@
  .r19-cinema:has(.r23-solar) .r19-cinema-bottom{margin-top:4px;padding-top:14px}
  .mobile-menu>nav{max-height:calc(100dvh - var(--header) - 16px)}
  .project-actions{flex-wrap:wrap}
- .r27-download-note{margin-top:0}
 }
 @media(prefers-reduced-motion:reduce){
  .site-header .nav-card,.site-header .r07-nav-toggle,.site-header .r07-nav-toggle svg{transition:none}
@@ -43,11 +41,10 @@
 .r27-solar-buttons button{cursor:pointer;overflow-wrap:anywhere}
 .r27-solar-buttons button:focus-visible{outline:2px solid #f1b07e;outline-offset:3px}
 .r27-solar-guide,.r27-solar-buttons{min-width:0;max-width:100%}
-.r27-solar-guide span,.catalog-line-meta,.r27-download-note{overflow-wrap:anywhere}
+.r27-solar-guide span,.catalog-line-meta{overflow-wrap:anywhere}
 .r07-search-row input{min-width:0;max-width:100%}
 .r07-submenu a:focus-visible,.mobile-menu nav a:focus-visible,.project-actions .button:focus-visible,.footer-top nav a:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
 .project-actions .button{min-width:0;overflow-wrap:anywhere}
-.r27-download-note{opacity:1}
 @media(max-width:360px){
  .r27-solar-buttons{grid-template-columns:minmax(0,1fr)}
  .r27-solar-buttons button{white-space:normal}

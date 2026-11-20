@@ -22,23 +22,23 @@ Cloudflare Workers Static Assets. `npm run deploy` 실행 시 predeploy에서 �
 
 ## R27 UI 변경
 
-R25 원본 12개 조각의 크기·SHA-256 검증 후 `scripts/assemble-r27.cjs`에서 검증된 표식만 수정한다. 35개 페이지 경로를 유지한다. 태양계 조작 버튼, 모바일 터치 선택 모드, 스크롤 충돌 방지, 메뉴·카드·검색·다운로드 버튼 마감, 비공개 다운로드 7개 안내를 개선한다. 공개 배포용 설치 파일은 별도 배포 정책 확정 전까지 비공개 저장소 권한을 요구한다. 생성 HTML의 SHA-256은 빌드 로그에서 확인한다. 검색 색인 억제는 접근 통제를 대체하지 않는다.
+R25 원본 12개 조각의 크기·SHA-256 검증 후 `scripts/assemble-r27.cjs`에서 검증된 표식만 수정한다. 35개 페이지 경로를 유지한다. 태양계 조작 버튼, 모바일 터치 선택 모드, 스크롤 충돌 방지, 메뉴·카드·검색 및 제품 소개 화면을 개선한다. 홈페이지는 소개 전용이며 설치파일 및 직접 배포 경로를 제공하지 않는다. 생성 HTML의 SHA-256은 빌드 로그에서 확인한다. 검색 색인 억제는 접근 통제를 대체하지 않는다.
 
 ## 최신 공식 릴리즈 확인 (2026-11-20 KST)
 
 아래는 각 제품 저장소의 GitHub Latest Release 조회 결과이며, 개발 중 버전이나 설치 검증 완료를 뜻하지 않는다. 비공개 저장소는 로그인과 접근 권한이 필요하다.
 
-| 제품 | 공식 릴리즈 태그 | 릴리즈 |
-|---|---|---|
-| Sunrise Capture | v4.2.2 | [GitHub](https://github.com/Peter-msk/Sunrise_capture/releases/tag/v4.2.2) |
-| Sunrise PDF Editor | v4.6.3 | [GitHub](https://github.com/Peter-msk/Sunrise-PDF-Editor/releases/tag/v4.6.3) |
-| Sunrise Cleaner | v3.7.7 | [GitHub](https://github.com/Peter-msk/Sunrise-Cleaner/releases/tag/v3.7.7) |
-| Sunrise PDF PRO | v2.7.1 | [GitHub](https://github.com/Peter-msk/Sunrise_PDF-PRO/releases/tag/v2.7.1) |
-| Sunrise Finder | v2.1.2 | [GitHub](https://github.com/Peter-msk/Sunrise_Finder/releases/tag/v2.1.2) |
-| Sunrise EIASS | v4.7.0 | [GitHub](https://github.com/Peter-msk/Sunrise-EIASS/releases/tag/v4.7.0) |
-| Sunrise Image | Sunrise_Image | [GitHub](https://github.com/Peter-msk/Sunrise-Image/releases/tag/Sunrise_Image) |
-| Sunrise File Manager | v1.8.2 | [GitHub](https://github.com/Peter-msk/Sunrise-File-Manager/releases/tag/v1.8.2) |
-| Sunrise Drawing Editor | v1.1.0 | [GitHub](https://github.com/Peter-msk/Sunrise_Drawing_Editor/releases/tag/v1.1.0) |
+| 제품 | 공식 릴리즈 태그 |
+|---|---|
+| Sunrise Capture | v4.2.2 |
+| Sunrise PDF Editor | v4.6.3 |
+| Sunrise Cleaner | v3.7.7 |
+| Sunrise PDF PRO | v2.7.1 |
+| Sunrise Finder | v2.1.2 |
+| Sunrise EIASS | v4.7.0 |
+| Sunrise Image | Sunrise_Image |
+| Sunrise File Manager | v1.8.2 |
+| Sunrise Drawing Editor | v1.1.0 |
 
 Sunrise Control, PDF Editor Web, PDF PRO Web, EIA Data Hub는 Latest Release 확인 불가로 버전을 추정하지 않는다.
 
@@ -48,10 +48,10 @@ R27의 기존 원본과 경로를 유지하며 좁은 화면의 버튼 배치, �
 
 ## 제품 페이지 최신화 (2026-11-20 KST)
 
-- File Manager: 상세 및 목록 v1.8.0 → v1.8.2, 공식 설치 파일 주소 교체.
-- Drawing Editor: v1.1.0 및 공식 EXE 링크 추가, 기존 실행 파일 미제공 안내 수정.
-- 기존 7개 비공개 다운로드 안내에 Drawing Editor 1개를 추가하여 총 8개로 검증한다. 계정 및 저장소 접근 권한 요구는 유지한다. Finder의 기존 개발 중지·종료 표기는 변경하지 않는다.
-- R25 원본, 35개 경로, Cloudflare 설정과 나머지 제품 다운로드 주소 유지. 빌드 스크립트는 경로별 정확한 기존 표식 및 링크 개수를 검증하고 불일치 시 중단한다.
+- File Manager: 상세 및 목록 v1.8.0 → v1.8.2, 공식 버전 정보 갱신.
+- Drawing Editor: v1.1.0 및 이용 형태 갱신.
+- 이전 다운로드 안내 및 링크는 6차 소개 전용 정책으로 폐기한다. Finder의 기존 개발 중지·종료 표기는 변경하지 않는다.
+- R25 원본, 35개 경로, Cloudflare 설정과 나머지 제품 정보 유지. 빌드 스크립트는 경로별 정확한 기존 표식 및 링크 개수를 검증하고 불일치 시 중단한다.
 - 부분 원본으로 변경 로직과 실패 차단을 검증했고, 커밋된 빌드 스크립트의 JavaScript 구문 검사를 통과했다. 전체 원본 복원 빌드·브라우저 시각검증·운영 배포는 아직 수행하지 않았다.
 
 ## 3차 상세 보완 — 내비게이션 및 전체 데이터 검증 (2026-11-20 KST)
@@ -66,3 +66,10 @@ R27의 기존 원본과 경로를 유지하며 좁은 화면의 버튼 배치, �
 - R25 기준본은 수정하지 않고 R27 빌드 시 검색 함수 및 두 입력창에만 정확한 표식 기반 패치 적용. 초기화 버튼 CSS는 해당 검색 행에 한정.
 - Chromium 144 실제 브라우저에서 26개 제품의 이름·버전·상태로 구성한 축소 fixture를 사용하여 320/390/1440px 검색·초기화·분류 조작 66개 시험 통과. 전체 사이트 레이아웃 또는 실제 홈페이지 완전 빌드 성공으로 해석하지 않는다.
 - 기존 CI는 실행 단계 0개 상태에서 실패. 로컬 환경에는 Node.js/Chromium이 있으나 private raw GitHub 호스트 DNS 접근 불가. 전체 실빌드 및 운영 배포는 보류.
+
+## 6차 보완 — 홈페이지 소개 전용 정책 (2026-11-20 KST)
+
+- 사용자 확정: 모든 PC 프로그램과 QGIS 플러그인은 기능, 지원 환경, 개발 상태 및 버전을 설명하는 소개 페이지로만 운영. 설치파일·압축파일·직접 배포 링크 미제공.
+- 원본의 설치파일 링크 7개 제거, 이전 R27의 Drawing Editor 다운로드 추가 로직 삭제. 외부 웹 서비스 실행 버튼 4개는 내부 웹 버전 소개 링크 2개로 대체하거나 제거. 이용 안내 및 ZIP 안내 문구 정정. 프로그램 자체의 문서 다운로드 기능 설명은 유지.
+- P8은 내부 라우팅, 검색, 메뉴, 목차, 이미지 확대 및 기타 사용자 조작 검증으로 한정한다. 직접 다운로드 성공 여부는 검증 대상에서 제외한다. 소개 전용 정책 위반 링크가 존재하는지는 별도 부정 검사한다.
+- 원본 조각 및 제품별 저장소의 릴리즈·업데이트 계약은 유지. 조회 가능한 원본 부분으로 대상 표식/정책 부정 검사 및 JavaScript 구문 검사 실시. 전체 실빌드와 운영 배포는 아직 미완료.

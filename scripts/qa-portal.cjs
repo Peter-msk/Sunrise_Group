@@ -33,6 +33,7 @@ const assert = require('node:assert/strict');
         catch(e){failures.push(width+' '+route+' render timeout');continue;}
         const metrics=await page.evaluate(()=>({heading:!!document.querySelector('#page-outlet h1'),width:document.documentElement.scrollWidth,inner:innerWidth}));
         visited++;
+        check(await page.locator('#page-outlet a[href^="http"], #page-outlet .primary-download, #page-outlet a[download]').count()===0,width+' '+route+' intro-only policy');
           check(metrics.heading,width+' '+route+' missing heading');
         check(metrics.width<=metrics.inner+2,width+' '+route+' horizontal overflow '+metrics.width+'/'+metrics.inner);
       }
@@ -81,10 +82,10 @@ const assert = require('node:assert/strict');
         }
         await page.evaluate(()=>{location.hash='#/projects/file-manager'});
         await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/projects/file-manager');
-        check((await page.locator('#page-outlet .primary-download').getAttribute('href')).includes('/v1.8.2/'),'File Manager asset');
+        check(await page.locator('#page-outlet #specifications').innerText().then(t=>t.includes('v1.8.2')),'File Manager version');
         await page.evaluate(()=>{location.hash='#/projects/drawing-editor'});
         await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/projects/drawing-editor');
-        check((await page.locator('#page-outlet .primary-download').getAttribute('href')).includes('/v1.1.0/'),'Drawing asset');
+        check(await page.locator('#page-outlet #specifications').innerText().then(t=>t.includes('v1.1.0')),'Drawing Editor version');
       }
       await context.close();
       console.log('Viewport completed: '+width+' / routes '+chosen.length);
