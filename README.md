@@ -1,9 +1,9 @@
-# Sunrise Group — 공식 홈페이지 R26 배포 보안
+# Sunrise Group — 공식 홈페이지 R27
 
 운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
 - 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 릴리즈: R26 배포 보안 (2026-11-20) · HTML 기준본 R25 유지
+- 릴리즈: R27 세부 UI 개선 (2026-11-20) · HTML 원본 기준본 R25 유지
 - 배포 파일: `public/index.html` (빌드 시 생성)
 - 기준본: 11120080 bytes
 - SHA-256: `aadf5a7f45b3575add06de90fc837e3142d3821f22f4a2b80c8ae0e4bee29aef`
@@ -19,3 +19,7 @@ Cloudflare Workers Static Assets. `npm run deploy` 실행 시 predeploy에서 �
 ## R26 배포 안전 계약
 
 `cloudflare.config.ts`에서 운영 Worker 이름과 previewUrls=false를 고정한다. 기존 폐기 Worker는 재생성하지 않는다. `public/_headers`는 검색 색인 억제와 외부 Referrer 전달 방지를 설정한다. 이 설정은 인증이나 접근 통제를 대체하지 않는다. 비공개 저장소와 Cloudflare Git 연동 권한을 유지한다. R25 HTML 원본 조각 및 무결성 기준은 변경하지 않는다.
+
+## R27 UI 변경
+
+R25 원본 12개 조각의 크기·SHA-256 검증 후 `scripts/assemble-r27.cjs`에서 검증된 표식만 수정한다. 35개 페이지 경로를 유지한다. 태양계 조작 버튼, 모바일 터치 선택 모드, 스크롤 충돌 방지, 메뉴·카드·검색·다운로드 버튼 마감, 비공개 다운로드 7개 안내를 개선한다. 공개 배포용 설치 파일은 별도 배포 정책 확정 전까지 비공개 저장소 권한을 요구한다. 생성 HTML의 SHA-256은 빌드 로그에서 확인한다. 검색 색인 억제는 접근 통제를 대체하지 않는다.
