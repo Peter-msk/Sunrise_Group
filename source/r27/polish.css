@@ -38,3 +38,20 @@
  .site-header .nav-card,.site-header .r07-nav-toggle,.site-header .r07-nav-toggle svg{transition:none}
  .catalog-line:hover{transform:none}
 }
+
+/* Detail refinement: local selectors only; preserve R27 layout and behavior. */
+.r27-solar-buttons button{cursor:pointer;overflow-wrap:anywhere}
+.r27-solar-buttons button:focus-visible{outline:2px solid #f1b07e;outline-offset:3px}
+.r27-solar-guide,.r27-solar-buttons{min-width:0;max-width:100%}
+.r27-solar-guide span,.catalog-line-meta,.r27-download-note{overflow-wrap:anywhere}
+.r07-search-row input{min-width:0;max-width:100%}
+.r07-submenu a:focus-visible,.mobile-menu nav a:focus-visible,.project-actions .button:focus-visible,.footer-top nav a:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
+.project-actions .button{min-width:0;overflow-wrap:anywhere}
+.r27-download-note{opacity:1}
+@media(max-width:360px){
+ .r27-solar-buttons{grid-template-columns:minmax(0,1fr)}
+ .r27-solar-buttons button{white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){
+ .r27-solar-buttons button,.project-actions .button,.catalog-line{transition:none}
+}
