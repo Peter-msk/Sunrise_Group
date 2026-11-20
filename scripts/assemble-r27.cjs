@@ -27,6 +27,29 @@ html=html.replace(/(<a class="button primary-download" href="https:\/\/github\.c
   return start+'권한 있는 계정으로 다운로드 ↓</a><small class="r27-download-note">비공개 저장소 · GitHub 로그인 및 접근 권한 필요</small>';
 });
 check(changed===7, 'expected 7 private release links, got '+changed);
+function refreshProductReleases(html){
+ const ensure=(ok,msg)=>{if(!ok)throw new Error('release details: '+msg)};
+ function exact(s,from,to,count=1){ensure(s.split(from).length===count+1,'unexpected marker '+from.slice(0,100));return s.split(from).join(to)}
+ function scoped(s,pattern,modify){let n=0;const next=s.replace(pattern,m=>{n++;return modify(m)});ensure(n===1,'unexpected scope '+pattern);return next}
+ const fileOld="https://github.com/Peter-msk/Sunrise-File-Manager/releases/download/v1.8.0/Sunrise_File_Manager_1.8.0_Setup.exe";
+ const fileNew="https://github.com/Peter-msk/Sunrise-File-Manager/releases/download/v1.8.2/Sunrise_File_Manager_1.8.2_Setup.exe";
+ const drawingUrl="https://github.com/Peter-msk/Sunrise_Drawing_Editor/releases/download/v1.1.0/Sunrise.Drawing.Editor.exe";
+ html=scoped(html,/<template data-route="\/projects\/file-manager">[\s\S]*?<\/template>/g,s=>{
+ s=exact(s,fileOld,fileNew);s=exact(s,"<strong>v1.8.0</strong>","<strong>v1.8.2</strong>",2);return exact(s,"2026.11.17","2026.11.20");
+ });
+ html=scoped(html,/<a class="catalog-line[^"]*" href="#\/projects\/file-manager">[\s\S]*?<\/a>/g,s=>exact(s,"<b>v1.8.0</b>","<b>v1.8.2</b>"));
+ html=scoped(html,/<template data-route="\/projects\/drawing-editor">[\s\S]*?<\/template>/g,s=>{
+ s=exact(s,'<div class="project-actions"></div>','<div class="project-actions"><a class="button primary-download" href="'+drawingUrl+'">권한 있는 계정으로 다운로드 ↓</a><small class="r27-download-note">비공개 저장소 · GitHub 로그인 및 접근 권한 필요</small></div>');
+ s=exact(s,'<div><span>이용 형태</span><strong>정식 배포</strong></div><div><span>현재 상태</span><strong>정식 배포</strong></div><div><span>이용 안내</span><strong>정식 배포</strong></div>','<div><span>이용 형태</span><strong>Windows 실행 파일</strong></div><div><span>현재 상태</span><strong>정식 배포</strong></div><div><span>배포 버전</span><strong>v1.1.0</strong></div>');
+ s=exact(s,'현재 제공되는 배포 자료에는 Windows 실행 파일이 포함되어 있지 않습니다.','배포 정보 확인: 2026.11.20 · GitHub 공식 릴리즈 v1.1.0에서 Windows EXE 제공. 비공개 저장소 접근 권한이 필요합니다.');
+ return exact(s,'<div class="status-box"><small>배포 정보</small><strong>정식 배포</strong></div>','<div class="status-box"><small>배포 정보</small><strong>v1.1.0</strong></div>');
+ });
+ html=scoped(html,/<a class="catalog-line[^"]*" href="#\/projects\/drawing-editor">[\s\S]*?<\/a>/g,s=>exact(s,'<b>정식 배포</b><small></small>','<b>v1.1.0</b><small>정식 배포</small>'));
+ ensure(!html.includes(fileOld),'old download survived');ensure(html.split(fileNew).length===2,'file link count');ensure(html.split(drawingUrl).length===2,'drawing link count');
+ return html;
+}
+html=refreshProductReleases(html);
+check((html.match(/class="r27-download-note"/g)||[]).length===8,'expected 8 private download notices');
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)];
 const main=scripts.filter(s=>s[1].includes('function r23SolarRender(figure)'));
 check(main.length===1, 'main script not found');
@@ -35,4 +58,4 @@ check((html.match(/<template data-route=/g)||[]).length===35,'route count change
 check(/<\/html>\s*$/i.test(html), 'invalid HTML closure');
 const bytes=Buffer.from(html,'utf8');
 fs.writeFileSync(output,bytes);
-console.log('R27 UI patch verified: 35 routes; 7 private download labels; inline JS syntax PASS; '+bytes.length+' bytes; SHA-256 '+crypto.createHash('sha256').update(bytes).digest('hex'));
+console.log('R27 UI patch verified: 35 routes; 8 private download labels; product details refreshed; inline JS syntax PASS; '+bytes.length+' bytes; SHA-256 '+crypto.createHash('sha256').update(bytes).digest('hex'));
