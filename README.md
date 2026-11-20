@@ -1,9 +1,9 @@
-# Sunrise Group — 공식 홈페이지 R25
+# Sunrise Group — 공식 홈페이지 R26 배포 보안
 
-운영 Worker: `sunrise-group` · Production branch: `main`
+운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
-- 운영 주소: https://sunrise-group.ko-pg.workers.dev
-- 릴리즈: R25 (2026-11-20)
+- 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
+- 릴리즈: R26 배포 보안 (2026-11-20) · HTML 기준본 R25 유지
 - 배포 파일: `public/index.html` (빌드 시 생성)
 - 기준본: 11120080 bytes
 - SHA-256: `aadf5a7f45b3575add06de90fc837e3142d3821f22f4a2b80c8ae0e4bee29aef`
@@ -15,3 +15,7 @@
 Cloudflare Workers Static Assets. `npm run deploy` 실행 시 predeploy에서 복원·검증 후 기존 Cloudflare CLI로 배포한다. Cloudflare 인증과 배포 권한이 필요하다. main의 Git 연동 자동 빌드를 사용한다.
 
 다음 버전은 원본 조각과 manifest를 함께 갱신하거나, 단일 HTML을 직접 저장하는 구조로 전환할 경우 빌드 스크립트와 .gitignore를 함께 갱신한다. 이전 버전은 Git 이력으로 복원할 수 있다. 기존 제품별 저장소 및 Worker는 변경하지 않는다.
+
+## R26 배포 안전 계약
+
+`cloudflare.config.ts`에서 운영 Worker 이름과 previewUrls=false를 고정한다. 기존 폐기 Worker는 재생성하지 않는다. `public/_headers`는 검색 색인 억제와 외부 Referrer 전달 방지를 설정한다. 이 설정은 인증이나 접근 통제를 대체하지 않는다. 비공개 저장소와 Cloudflare Git 연동 권한을 유지한다. R25 HTML 원본 조각 및 무결성 기준은 변경하지 않는다.
