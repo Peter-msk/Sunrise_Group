@@ -55,3 +55,10 @@
 @media(prefers-reduced-motion:reduce){
  .r27-solar-buttons button,.project-actions .button,.catalog-line{transition:none}
 }
+
+/* Catalogue search control only; existing card structure remains unchanged. */
+.r07-search-row .r27-search-clear{min-height:44px;flex:0 0 auto;padding:6px 10px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.r07-search-row .r27-search-clear:disabled{opacity:.55;cursor:default}
+.r07-search-row .r27-search-clear:not(:disabled):hover{background:#f1f3ee}
+.r07-search-row .r27-search-clear:focus-visible{outline-offset:2px}
+@media(max-width:480px){.r07-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px}.r07-search-row .r07-result{grid-column:1/-1;white-space:normal}}
