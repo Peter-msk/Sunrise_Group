@@ -16,6 +16,7 @@ const assert = require('node:assert/strict');
   let browser;
   const failures=[];
   let visited=0;
+  let navigationAttempted=0,navigationPassed=0;
   const check=(condition,label)=>{if(!condition)failures.push(label);};
   try {
     browser=await chromium.launch({headless:true});
@@ -124,11 +125,83 @@ const assert = require('node:assert/strict');
         await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/projects/eia-hub');
         check(await page.locator('#page-outlet #specifications > div').count()===2,width+' deduplicated EIA Hub facts');
       }
+      if(width===1440||width===390){
+        current='navigation';
+        const waitDestination=async href=>{
+          const [route,anchor]=href.slice(1).split('#');
+          await page.waitForFunction(({href,route})=>location.hash===href&&document.querySelector('#page-outlet')?.dataset.route===route,{href,route},{timeout:7000});
+          assert.ok(await page.locator('#page-outlet h1').isVisible(),'destination heading: '+href);
+          if(anchor)await page.waitForFunction(id=>{
+            const outlet=document.querySelector('#page-outlet'),target=document.getElementById(id);
+            if(!target||!outlet.contains(target)||!target.getClientRects().length)return false;
+            const rect=target.getBoundingClientRect(),header=document.querySelector('.site-header')?.getBoundingClientRect();
+            return rect.top<innerHeight&&rect.bottom>Math.max(0,header?.bottom||0)&&(target.tagName!=='DETAILS'||target.open);
+          },anchor,{timeout:7000});
+        };
+        const navigationCase=async(label,run)=>{
+          navigationAttempted++;
+          const start=failures.length;
+          try{
+            await page.keyboard.press('Escape');
+            await run();
+            if(failures.length===start)navigationPassed++;
+            console.log('Navigation '+width+' '+label+': '+(failures.length===start?'PASS':'FAIL'));
+          }catch(error){failures.push(width+' '+label+': '+String(error.message).slice(0,650));console.log('Navigation '+width+' '+label+': FAIL');}
+        };
+        if(width===1440){
+          for(const href of ['#/about','#/programs','#/development','#/help']){
+            await navigationCase('desktop primary '+href,async()=>{
+              await page.locator('.desktop-nav .nav-card[href="'+href+'"]').click({timeout:7000});
+              await waitDestination(href);
+            });
+          }
+          for(const [id,links] of [['group-submenu',['#/about','#/philosophy','#/future']],['program-submenu',['#/programs/pc','#/programs/qgis']],['development-submenu',['#/development#pc-status','#/development#qgis-status']]]){
+            for(const href of links)await navigationCase('desktop submenu '+href,async()=>{
+              const toggle=page.locator('.desktop-nav button[aria-controls="'+id+'"]');
+              const submenu=page.locator('#'+id);
+              await toggle.click({timeout:7000});
+              assert.equal(await toggle.getAttribute('aria-expanded'),'true');
+              await submenu.locator('a[href="'+href+'"]').click({timeout:7000});
+              await waitDestination(href);
+              assert.equal(await toggle.getAttribute('aria-expanded'),'false');
+              assert.ok(!(await submenu.isVisible()),'submenu closes after selection');
+            });
+          }
+        }else{
+          const menu=page.locator('.mobile-menu');
+          for(const href of ['#/about','#/philosophy','#/future','#/programs','#/programs/pc','#/programs/qgis','#/development','#/development#pc-status','#/development#qgis-status','#/help']){
+            await navigationCase('mobile menu '+href,async()=>{
+              await menu.locator('summary').click({timeout:7000});
+              assert.ok(await menu.evaluate(e=>e.open));
+              await menu.locator('nav a[href="'+href+'"]').click({timeout:7000});
+              await waitDestination(href);
+              assert.ok(!(await menu.evaluate(e=>e.open)),'mobile menu closes after selection');
+            });
+          }
+        }
+        for(const route of ['/programs/pc','/programs/qgis']){
+          await navigationCase('catalogue click and history '+route,async()=>{
+            await page.evaluate(r=>{location.hash='#'+r},route);
+            await waitDestination('#'+route);
+            const link=page.locator('#page-outlet .catalog-line[href^="#/projects/"]:visible').first();
+            const href=await link.getAttribute('href',{timeout:7000});
+            assert.ok(href&&routes.includes(href.slice(1)),'catalogue link targets a known product');
+            await link.click({timeout:7000});
+            await waitDestination(href);
+            await page.goBack({timeout:7000});
+            await waitDestination('#'+route);
+            await page.goForward({timeout:7000});
+            await waitDestination(href);
+          });
+        }
+      }
       await context.close();
       console.log('Viewport completed: '+width+' / routes '+chosen.length);
     }
   }finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
-  console.log(JSON.stringify({visited,failures},null,2));
+  console.log(JSON.stringify({visited,navigationAttempted,navigationPassed,failures},null,2));
   assert.equal(visited,95,'Expected viewport/route combinations');
+  assert.equal(navigationAttempted,25,'Expected navigation cases');
+  assert.equal(navigationPassed,25,'Navigation QA failures');
   assert.equal(failures.length,0,'Browser QA failures');
 })().catch(e=>{console.error(e);process.exitCode=1});
