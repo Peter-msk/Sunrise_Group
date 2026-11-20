@@ -86,6 +86,19 @@ const assert = require('node:assert/strict');
         await page.evaluate(()=>{location.hash='#/projects/drawing-editor'});
         await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/projects/drawing-editor');
         check(await page.locator('#page-outlet #specifications').innerText().then(t=>t.includes('v1.1.0')),'Drawing Editor version');
+        await page.evaluate(()=>{location.hash='#/projects/capture'});
+        await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/projects/capture');
+        const preview=page.locator('#page-outlet a[data-image="true"]').first();
+        const popupEvent=page.waitForEvent('popup');
+        await preview.click();
+        const popup=await popupEvent;
+        try{
+          await popup.waitForFunction(()=>location.protocol==='blob:'&&document.querySelector('img')?.naturalWidth>0);
+          check(await popup.evaluate(()=>window.opener===null),width+' screenshot preview opener isolation');
+        }finally{await popup.close();}
+        await page.evaluate(()=>{location.hash='#/projects/eia-hub'});
+        await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/projects/eia-hub');
+        check(await page.locator('#page-outlet #specifications > div').count()===2,width+' deduplicated EIA Hub facts');
       }
       await context.close();
       console.log('Viewport completed: '+width+' / routes '+chosen.length);

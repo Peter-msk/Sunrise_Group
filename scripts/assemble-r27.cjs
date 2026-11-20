@@ -75,6 +75,39 @@ function applyIntroPolicy(html){
  return html;
 }
 html=applyIntroPolicy(html);
+function refineProductFacts(html){
+ const data=[
+ ["finder","공개 미정","개발 중지","개발 중지·종료","PC 프로그램","개발 중지","공개 미정"],
+ ["eia-hub","개발 중","개발 중","개발 중","웹 프로젝트","개발 중",null],
+ ["eia-manager","개발 중","개발 중","개발 중","PC 프로그램","개발 중",null],
+ ["eiass-mobile","공개 미정","상태 확인 중","상태 확인 필요","모바일 프로젝트","상태 확인 중","공개 미정"],
+ ["gis","공개 미정","상태 확인 중","상태 확인 필요","공간정보 프로젝트","상태 확인 중","공개 미정"],
+ ["aermod","공개 미정","개발 중지","개발 중지·종료","대기확산 모델링 프로젝트","개발 중지","공개 미정"],
+ ["pdf-editor-web","웹 서비스","웹 브라우저","브라우저에서 이용","웹 서비스","웹 서비스 운영 중","웹 브라우저"],
+ ["pdf-pro-web","웹 서비스","웹 브라우저","브라우저에서 이용","웹 서비스","웹 서비스 운영 중","웹 브라우저"]];
+ const field=(name,value)=>'<div><span>'+name+'</span><strong>'+value+'</strong></div>';
+ const exact=(s,a,b)=>{if(s.split(a).length!==2)throw Error('product facts marker: '+a.slice(0,100));return s.replace(a,()=>b)};
+ for(const [id,form,state,guide,type,status,extra] of data){
+  const re=new RegExp('<template data-route="/projects/'+id+'">[\\s\\S]*?<\\/template>','g');let n=0;
+  html=html.replace(re,s=>{n++;
+   s=exact(s,field('이용 형태',form)+field('현재 상태',state)+field('이용 안내',guide),field('프로젝트 유형',type)+field('개발 및 운영 상태',status)+(extra?field(id.endsWith('-web')?'이용 환경':'공개 상태',extra):''));
+   if(!extra)s=exact(s,'class="section project-quick r19-specs" id="specifications"','class="section project-quick r19-specs r27-specs-two" id="specifications"');
+   return s;
+  });if(n!==1)throw Error('product facts route '+id);
+ }
+ const old='프로그램 화면을 준비하고 있습니다.';
+ if(html.split(old).length!==8)throw Error('expected 7 unregistered screenshot notices');
+ return html.replaceAll(old,'실제 실행 화면은 아직 등록하지 않았습니다.');
+}
+html=refineProductFacts(html);
+
+const previewSource=fs.readFileSync(path.join(__dirname,'..','source','r27','image-preview.js'),'utf8');
+check(!/<\/script/i.test(previewSource),'invalid preview source embedding');
+once("let hasRendered=false;",previewSource+"\nlet hasRendered=false;");
+once("if(link.dataset.image==='true'){e.preventDefault();const [head,base64]=link.href.split(',');const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));const url=URL.createObjectURL(new Blob([bytes],{type:head.slice(5).split(';')[0]}));window.open(url,'_blank','noopener');setTimeout(()=>URL.revokeObjectURL(url),60000)}","if(link.dataset.image==='true'){openProductPreview(e,link)}");
+once("render();queueProgress();\n})();\n</script><script id=\"sunrise-r21-motion\">","document.addEventListener('auxclick',e=>{const link=e.target.closest('a[data-image=\"true\"]');if(link)openProductPreview(e,link)});render();queueProgress();\n})();\n</script><script id=\"sunrise-r21-motion\">");
+check((html.match(/<a\\b[^>]*data-image="true"[^>]*>/g)||[]).length===10,'expected 10 screenshot links');
+
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)];
 const main=scripts.filter(s=>s[1].includes('function r23SolarRender(figure)'));
 check(main.length===1, 'main script not found');

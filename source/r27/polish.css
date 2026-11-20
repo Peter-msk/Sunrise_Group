@@ -59,3 +59,10 @@
 .r07-search-row .r27-search-clear:not(:disabled):hover{background:#f1f3ee}
 .r07-search-row .r27-search-clear:focus-visible{outline-offset:2px}
 @media(max-width:480px){.r07-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px}.r07-search-row .r07-result{grid-column:1/-1;white-space:normal}}
+
+/* Product facts and screenshot feedback: section-local finishing. */
+.sg3-product .r27-specs-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sg3-product .project-quick strong{overflow-wrap:anywhere}
+.r27-preview-status{font-size:12px;line-height:1.6;color:var(--muted);margin:6px 0;overflow-wrap:anywhere}
+.screen-full-link:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
+@media(max-width:360px){.sg3-product .r27-specs-two{grid-template-columns:1fr}}
