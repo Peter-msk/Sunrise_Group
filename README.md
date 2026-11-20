@@ -23,3 +23,25 @@ Cloudflare Workers Static Assets. `npm run deploy` 실행 시 predeploy에서 �
 ## R27 UI 변경
 
 R25 원본 12개 조각의 크기·SHA-256 검증 후 `scripts/assemble-r27.cjs`에서 검증된 표식만 수정한다. 35개 페이지 경로를 유지한다. 태양계 조작 버튼, 모바일 터치 선택 모드, 스크롤 충돌 방지, 메뉴·카드·검색·다운로드 버튼 마감, 비공개 다운로드 7개 안내를 개선한다. 공개 배포용 설치 파일은 별도 배포 정책 확정 전까지 비공개 저장소 권한을 요구한다. 생성 HTML의 SHA-256은 빌드 로그에서 확인한다. 검색 색인 억제는 접근 통제를 대체하지 않는다.
+
+## 최신 공식 릴리즈 확인 (2026-11-20 KST)
+
+아래는 각 제품 저장소의 GitHub Latest Release 조회 결과이며, 개발 중 버전이나 설치 검증 완료를 뜻하지 않는다. 비공개 저장소는 로그인과 접근 권한이 필요하다.
+
+| 제품 | 공식 릴리즈 태그 | 릴리즈 |
+|---|---|---|
+| Sunrise Capture | v4.2.2 | [GitHub](https://github.com/Peter-msk/Sunrise_capture/releases/tag/v4.2.2) |
+| Sunrise PDF Editor | v4.6.3 | [GitHub](https://github.com/Peter-msk/Sunrise-PDF-Editor/releases/tag/v4.6.3) |
+| Sunrise Cleaner | v3.7.7 | [GitHub](https://github.com/Peter-msk/Sunrise-Cleaner/releases/tag/v3.7.7) |
+| Sunrise PDF PRO | v2.7.1 | [GitHub](https://github.com/Peter-msk/Sunrise_PDF-PRO/releases/tag/v2.7.1) |
+| Sunrise Finder | v2.1.2 | [GitHub](https://github.com/Peter-msk/Sunrise_Finder/releases/tag/v2.1.2) |
+| Sunrise EIASS | v4.7.0 | [GitHub](https://github.com/Peter-msk/Sunrise-EIASS/releases/tag/v4.7.0) |
+| Sunrise Image | Sunrise_Image | [GitHub](https://github.com/Peter-msk/Sunrise-Image/releases/tag/Sunrise_Image) |
+| Sunrise File Manager | v1.8.2 | [GitHub](https://github.com/Peter-msk/Sunrise-File-Manager/releases/tag/v1.8.2) |
+| Sunrise Drawing Editor | v1.1.0 | [GitHub](https://github.com/Peter-msk/Sunrise_Drawing_Editor/releases/tag/v1.1.0) |
+
+Sunrise Control, PDF Editor Web, PDF PRO Web, EIA Data Hub는 Latest Release 확인 불가로 버전을 추정하지 않는다.
+
+## 추가 UI 마감
+
+R27의 기존 원본과 경로를 유지하며 좁은 화면의 버튼 배치, 장문 줄바꿈, 검색 입력 폭, 키보드 포커스 및 모션 감소 설정을 보완한다. 실제 브라우저 시각 검증과 운영 배포 확인은 별도 수행 대상이다.
