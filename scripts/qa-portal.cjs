@@ -74,8 +74,32 @@ const assert = require('node:assert/strict');
           const menu=page.locator('.mobile-menu');
           await menu.locator('summary').click();
           check(await menu.evaluate(e=>e.open),'mobile menu opens');
-          await page.locator('#page-outlet h1').click();
-          check(!(await menu.evaluate(e=>e.open)),'mobile outside click closes');
+          // Click an exposed, non-interactive point outside the open overlay.
+          // The page heading can legitimately be covered by the navigation.
+          const routeBeforeOutsideClick=await page.evaluate(()=>location.hash);
+          const outside=await page.evaluate(()=>{
+            const menu=document.querySelector('.mobile-menu[open]');
+            if(!menu)return null;
+            const interactive='a,button,input,select,textarea,summary,label,[role="button"],[role="link"],[contenteditable]';
+            const candidates=[];
+            for(let y=4;y<innerHeight;y+=8){
+              for(let x=4;x<innerWidth;x+=8){
+                const target=document.elementFromPoint(x,y);
+                if(!target||menu.contains(target)||target.closest(interactive))continue;
+                const inPage=!!target.closest('#page-outlet');
+                candidates.push({x,y,inPage});
+              }
+            }
+            return candidates.find(p=>p.inPage)||candidates[0]||null;
+          });
+          check(!!outside,'mobile menu leaves an exposed non-interactive outside-click target');
+          if(outside){
+            await page.mouse.click(outside.x,outside.y);
+            check(!(await menu.evaluate(e=>e.open)),'mobile outside click closes');
+            check(await page.evaluate(()=>location.hash)===routeBeforeOutsideClick,'mobile outside click preserves route');
+          }
+          // Keep the Escape check independent if the outside-click assertion fails.
+          if(await menu.evaluate(e=>e.open))await menu.locator('summary').click();
           await menu.locator('summary').click();
           await page.keyboard.press('Escape');
           check(!(await menu.evaluate(e=>e.open)),'mobile Escape closes');
