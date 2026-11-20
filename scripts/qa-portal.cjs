@@ -2,6 +2,39 @@ const { chromium } = require('playwright');
 const fs = require('node:fs');
 const http = require('node:http');
 const assert = require('node:assert/strict');
+// Accepted R27 display baseline: not a claim of current releases or native product testing.
+const productContract={
+  "/programs/pc":[
+    ["capture","Sunrise Capture","v4.2.2","정식 배포","배포 버전","v4.2.2"],
+    ["file-manager","Sunrise File Manager","v1.8.2","정식 배포","배포 버전","v1.8.2"],
+    ["cleaner","Sunrise Cleaner","v3.7.7","정식 배포","배포 버전","v3.7.7"],
+    ["pdf-editor","Sunrise PDF Editor","v4.6.3","정식 배포","배포 버전","v4.6.3"],
+    ["pdf-pro","Sunrise PDF PRO","v2.7.1","정식 배포","배포 버전","v2.7.1"],
+    ["image","Sunrise Image","버전 번호 미표기","정식 배포","배포 버전","버전 번호 미표기"],
+    ["drawing-editor","Sunrise Drawing Editor","v1.1.0","정식 배포","배포 버전","v1.1.0"],
+    ["eiass","Sunrise EIASS","v4.7.0","정식 배포","배포 버전","v4.7.0"],
+    ["finder","Sunrise Finder","개발 중지","개발 중지","개발 및 운영 상태","개발 중지"],
+    ["eia-manager","EIA Manager","개발 중","개발 중","개발 및 운영 상태","개발 중"],
+    ["pdf-editor-web","Sunrise PDF Editor Web","웹 서비스 운영 중","정식 배포","개발 및 운영 상태","웹 서비스 운영 중"],
+    ["pdf-pro-web","Sunrise PDF PRO Web","웹 서비스 운영 중","정식 배포","개발 및 운영 상태","웹 서비스 운영 중"],
+    ["eia-hub","Sunrise EIA Data Hub","개발 중","개발 중","개발 및 운영 상태","개발 중"],
+    ["eiass-mobile","Sunrise EIASS Mobile","상태 확인 중","상태 확인 중","개발 및 운영 상태","상태 확인 중"],
+    ["gis","Sunrise GIS","상태 확인 중","상태 확인 중","개발 및 운영 상태","상태 확인 중"],
+    ["aermod","Sunrise Aermod","개발 중지","개발 중지","개발 및 운영 상태","개발 중지"]
+  ],
+  "/programs/qgis":[
+    ["qgis-tool","Sunrise QGIS Tool Plugin","0.7.4","개발 완료"],
+    ["photo-classifier","사진 분류 도우미","0.8.5 RC","개발 완료"],
+    ["protection-analyzer","환경 보호·보전지구 통합분석","1.0.24","개발 완료"],
+    ["survey-designer","환경영향평가 조사지점 자동설계","1.5.2","개발 완료"],
+    ["survey-locator","조사지점 찾기","1.0.0","개발 중"],
+    ["elevation-slope","표고·경사 통합분석","2.6.2 RC1","개발 완료"],
+    ["3d-map","Sunrise 3D Map","0.24.0 R23","개발 중"],
+    ["map-designer","Sunrise Map Designer","1.6.4 DEV94-RC1","개발 완료"],
+    ["onmap-spatializer","Sunrise OnMap Spatializer","2.0.0","개발 완료"],
+    ["color-distributor","QGIS 컬러 분배기","0.1.5 P5.1","개발 중"]
+  ]
+};
 (async () => {
   const html = fs.readFileSync('public/index.html');
   const routes = [...html.toString('utf8').matchAll(/<template data-route="([^"]+)"/g)].map(m => m[1]);
@@ -17,6 +50,7 @@ const assert = require('node:assert/strict');
   const failures=[];
   let visited=0;
   let navigationAttempted=0,navigationPassed=0;
+  let productAttempted=0,productPassed=0;
   const check=(condition,label)=>{if(!condition)failures.push(label);};
   try {
     browser=await chromium.launch({headless:true});
@@ -195,13 +229,105 @@ const assert = require('node:assert/strict');
           });
         }
       }
+      if(width===1440||width===390){
+        current='product-contract';
+        const clean=value=>String(value||'').replace(/\s+/g,' ').trim();
+        const productCase=async(label,run)=>{
+          productAttempted++;
+          const start=failures.length;
+          try{
+            await run();
+            if(failures.length===start)productPassed++;
+            console.log('Product '+width+' '+label+': '+(failures.length===start?'PASS':'FAIL'));
+          }catch(error){
+            failures.push(width+' product '+label+': '+String(error.message).slice(0,650));
+            console.log('Product '+width+' '+label+': FAIL');
+          }
+        };
+        const gotoRoute=async route=>{
+          await page.evaluate(r=>{location.hash='#'+r},route);
+          await page.waitForFunction(r=>location.hash==='#'+r&&document.querySelector('#page-outlet')?.dataset.route===r,route,{timeout:7000});
+        };
+        const input=page.locator('#page-outlet #product-search');
+        const activeRows=page.locator('#page-outlet .catalog-line:not([hidden])');
+        const visibleIds=()=>activeRows.evaluateAll(rows=>rows.map(r=>r.getAttribute('href')).sort());
+        const href=id=>'#/projects/'+id;
+        const checkCount=async(n,total)=>{
+          assert.equal(clean(await page.locator('#page-outlet .r07-result').innerText()),n+'개 / 전체 '+total+'개');
+          assert.equal(await page.locator('#page-outlet .r07-no-results').isVisible(),n===0);
+        };
+        for(const [route,items] of Object.entries(productContract)){
+          const qgis=route==='/programs/qgis';
+          const expected=items.map(r=>href(r[0])).sort();
+          await productCase('catalogue inventory '+route,async()=>{
+            await gotoRoute(route);
+            await input.fill('');
+            assert.deepEqual(await visibleIds(),expected);
+            await checkCount(items.length,items.length);
+            await input.fill('zz_sunrise_missing_product_zz');
+            assert.deepEqual(await visibleIds(),[]);
+            await checkCount(0,items.length);
+            await page.locator('#page-outlet .r27-search-clear').click({timeout:7000});
+            assert.deepEqual(await visibleIds(),expected);
+            assert.ok(await input.evaluate(e=>e.value===''&&document.activeElement===e));
+            await checkCount(items.length,items.length);
+          });
+          for(const state of ['개발 중','개발 완료','개발 중지','정식 배포','상태 확인 중','웹 서비스 운영 중']){
+            await productCase('status '+route+' '+state,async()=>{
+              await gotoRoute(route);
+              await input.fill(state);
+              const ids=items.filter(r=>r[3]===state||(state==='웹 서비스 운영 중'&&r[2]===state)).map(r=>href(r[0])).sort();
+              assert.deepEqual(await visibleIds(),ids);
+              await checkCount(ids.length,items.length);
+              const groupsCorrect=await page.locator('#page-outlet .catalog-group').evaluateAll(groups=>groups.every(g=>g.hidden===!g.querySelector('.catalog-line:not([hidden])')));
+              assert.ok(groupsCorrect,'empty category visibility');
+            });
+          }
+          for(const [id,name,version,status,field,expectedValue] of items){
+            await productCase(route+' '+id,async()=>{
+              await gotoRoute(route);
+              const row=page.locator('#page-outlet .catalog-line[href="'+href(id)+'"]');
+              assert.equal(await row.count(),1,'unique catalogue item');
+              for(const query of new Set([name,name.replace(/\s+/g,'')])){
+                await input.fill(query);
+                assert.ok(await row.isVisible(),'search finds '+name+' / '+query);
+              }
+              assert.equal(clean(await row.locator('h3').innerText()),name);
+              assert.equal(clean(await row.locator('.catalog-line-meta b').innerText()),version);
+              assert.ok(clean(await row.locator('.catalog-line-meta').innerText()).includes(status),'catalogue status');
+              await row.click({timeout:7000});
+              await page.waitForFunction(id=>location.hash==='#/projects/'+id&&document.querySelector('#page-outlet')?.dataset.route==='/projects/'+id,id,{timeout:7000});
+              assert.equal(clean(await page.locator('#page-outlet h1').innerText()),name);
+              const facts=await page.locator('#page-outlet #specifications > div').evaluateAll(nodes=>nodes.map(e=>[e.querySelector('span')?.textContent?.trim(),e.querySelector('strong')?.textContent?.trim()]));
+              assert.ok(facts.length>=2&&facts.every(([k,v])=>k&&v),'nonempty product facts');
+              assert.equal(new Set(facts.map(f=>f[0])).size,facts.length,'unique fact labels');
+              const values=Object.fromEntries(facts);
+              if(qgis){
+                assert.equal(values['이용 형태'],'QGIS 플러그인');
+                assert.equal(values['확인한 개발 기준본'],version);
+                assert.equal(values['개발 상태'],status);
+                const statusBox=clean(await page.locator('#page-outlet .status-box').innerText());
+                assert.ok(statusBox.includes('공개 링크 미확인')&&statusBox.includes('이번 홈페이지 작업에서는 미검증'),'QGIS evidence limits');
+              }else{
+                assert.equal(values[field],expectedValue,'detail fact '+field);
+                if(id==='finder'||id==='aermod')assert.equal(values['공개 상태'],'공개 미정');
+                if(id==='eia-hub'||id==='eia-manager')assert.equal(facts.length,2,'deduplicated development facts');
+                if(id.endsWith('-web'))assert.equal(values['이용 환경'],'웹 브라우저');
+              }
+              assert.equal(await page.locator('#page-outlet a[href^="http"],#page-outlet .primary-download,#page-outlet a[download]').count(),0,'introduction-only policy');
+            });
+          }
+        }
+      }
       await context.close();
       console.log('Viewport completed: '+width+' / routes '+chosen.length);
     }
   }finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
-  console.log(JSON.stringify({visited,navigationAttempted,navigationPassed,failures},null,2));
+  console.log(JSON.stringify({visited,navigationAttempted,navigationPassed,productAttempted,productPassed,failures},null,2));
   assert.equal(visited,95,'Expected viewport/route combinations');
   assert.equal(navigationAttempted,25,'Expected navigation cases');
   assert.equal(navigationPassed,25,'Navigation QA failures');
+  assert.equal(productAttempted,80,'Expected product catalogue cases');
+  assert.equal(productPassed,80,'Product catalogue QA failures');
   assert.equal(failures.length,0,'Browser QA failures');
 })().catch(e=>{console.error(e);process.exitCode=1});
