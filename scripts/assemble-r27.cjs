@@ -21,12 +21,93 @@ once('class="r23-stage" tabindex="0" role="img"', 'class="r23-stage" tabindex="0
 once("function down(e){if(e.pointerType==='mouse'&&e.button>2)return;", "function down(e){if(e.pointerType==='touch'&&stage.dataset.touchActive!=='true')return;if(e.pointerType==='mouse'&&e.button>2)return;");
 once("function wheel(e){e.preventDefault();zoom(", "function wheel(e){if(!e.altKey||document.activeElement!==stage)return;e.preventDefault();zoom(");
 once("const abort=new AbortController(),opts={signal:abort.signal};stage.addEventListener('pointerdown',down,opts);", "const abort=new AbortController(),opts={signal:abort.signal};const touchToggle=figure.querySelector('.r27-touch-toggle');if(touchToggle){touchToggle.addEventListener('click',()=>{const enabled=stage.dataset.touchActive!=='true';stage.dataset.touchActive=String(enabled);touchToggle.setAttribute('aria-pressed',String(enabled));touchToggle.textContent=enabled?'터치 조작 종료':'터치 조작 시작';},opts);}stage.addEventListener('pointerdown',down,opts);");
-let changed=0;
-html=html.replace(/(<a class="button primary-download" href="https:\/\/github\.com\/Peter-msk\/[^"]+\/releases\/download\/[^"]+">)프로그램 다운로드 ↓<\/a>/g, (_, start)=>{
-  changed++;
-  return start+'권한 있는 계정으로 다운로드 ↓</a><small class="r27-download-note">비공개 저장소 · GitHub 로그인 및 접근 권한 필요</small>';
-});
-check(changed===7, 'expected 7 private release links, got '+changed);
+// Navigation: exact R25 markers; retain existing hash routes and menu ownership.
+once("function render(){const raw=", "function render(reselect=false){const raw=");
+once("if(anchor)requestAnimationFrame(()=>{const target=document.getElementById(anchor);if(target?.tagName==='DETAILS')target.open=true;target?.scrollIntoView();});else if(changed){", "if(anchor){const expectedHash=location.hash,expectedRoute=template.dataset.route;requestAnimationFrame(()=>{if(location.hash!==expectedHash||outlet.dataset.route!==expectedRoute)return;const target=document.getElementById(anchor);if(!target||!outlet.contains(target))return;if(target.tagName==='DETAILS')target.open=true;target.scrollIntoView({block:'start'});});}else if(changed||reselect){");
+once("if(link.closest('.mobile-menu'))document.querySelector('.mobile-menu')?.removeAttribute('open');if(link.dataset.image===", "if(link.closest('.mobile-menu'))document.querySelector('.mobile-menu')?.removeAttribute('open');const href=link.getAttribute('href');if(!e.defaultPrevented&&e.button===0&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&!link.hasAttribute('download')&&!link.target&&href?.startsWith('#/')&&href===location.hash){e.preventDefault();render(true);queueProgress();return;}if(link.dataset.image===");
+once("document.addEventListener('keydown',e=>{if(e.key==='Escape'){const menu=document.querySelector('.mobile-menu[open]');", "document.addEventListener('click',e=>{const menu=document.querySelector('.mobile-menu[open]');if(menu&&!menu.contains(e.target)){menu.removeAttribute('open');}});const desktopViewport=matchMedia('(min-width:761px)');desktopViewport.addEventListener('change',e=>{if(e.matches)document.querySelector('.mobile-menu')?.removeAttribute('open');});document.addEventListener('keydown',e=>{if(e.key==='Escape'){const menu=document.querySelector('.mobile-menu[open]');");
+// Catalogue search refinement: one function, two catalogue controls.
+const catalogueSource=fs.readFileSync(path.join(__dirname,"..","source","r27","catalogue.js"),"utf8");
+check(!/<\/script/i.test(catalogueSource),"invalid catalogue source embedding");
+once("function setupCatalogue(){const input=outlet.querySelector('#product-search');if(!input)return;const groups=[...outlet.querySelectorAll('.catalog-group')], rows=[...outlet.querySelectorAll('.catalog-line')],count=outlet.querySelector('.r07-result'),empty=outlet.querySelector('.r07-no-results');function filter(){const terms=input.value.trim().toLocaleLowerCase('ko').split(/\\s+/).filter(Boolean);let visible=0;rows.forEach(a=>{const stateQuery=input.value.replace(/\\s+/g,'');const stateLabel=a.querySelector('.r08-state');const statusText=(stateLabel?.textContent||a.querySelector('.catalog-line-meta')?.textContent||'').replace(/\\s+/g,'');const hit=['개발중','개발완료','개발중지'].includes(stateQuery)?(stateQuery==='개발중'?statusText.includes('개발중')&&!statusText.includes('개발중지'):statusText.includes(stateQuery)):terms.every(t=>a.textContent.toLocaleLowerCase('ko').includes(t));a.hidden=!hit;if(hit)visible++});groups.forEach(g=>g.hidden=!g.querySelector('.catalog-line:not([hidden])'));count.textContent=`${visible}개 / 전체 ${rows.length}개`;empty.hidden=visible!==0;}input.addEventListener('input',filter);outlet.querySelectorAll('.r07-category-link').forEach(a=>a.addEventListener('click',()=>{if(input.value){input.value='';filter()}}));filter()}",catalogueSource.trimEnd());
+const searchMarker="<input autocomplete=\"off\" id=\"product-search\" placeholder=\"제품명 또는 기능 검색\" type=\"search\"/>";
+check(html.split(searchMarker).length===3,"expected two search controls");
+html=html.replaceAll(searchMarker,searchMarker+'<button class="r27-search-clear" type="button" disabled>초기화</button>');
+function refreshProductReleases(html){
+ const ensure=(ok,msg)=>{if(!ok)throw new Error('release details: '+msg)};
+ function exact(s,from,to,count=1){ensure(s.split(from).length===count+1,'unexpected marker '+from.slice(0,100));return s.split(from).join(to)}
+ function scoped(s,pattern,modify){let n=0;const next=s.replace(pattern,m=>{n++;return modify(m)});ensure(n===1,'unexpected scope '+pattern);return next}
+ html=scoped(html,/<template data-route="\/projects\/file-manager">[\s\S]*?<\/template>/g,s=>{
+ s=exact(s,"<strong>v1.8.0</strong>","<strong>v1.8.2</strong>",2);return exact(s,"2026.11.17","2026.11.20");
+ });
+ html=scoped(html,/<a class="catalog-line[^"]*" href="#\/projects\/file-manager">[\s\S]*?<\/a>/g,s=>exact(s,"<b>v1.8.0</b>","<b>v1.8.2</b>"));
+ html=scoped(html,/<template data-route="\/projects\/drawing-editor">[\s\S]*?<\/template>/g,s=>{
+ s=exact(s,'<div><span>이용 형태</span><strong>정식 배포</strong></div><div><span>현재 상태</span><strong>정식 배포</strong></div><div><span>이용 안내</span><strong>정식 배포</strong></div>','<div><span>이용 형태</span><strong>Windows 실행 파일</strong></div><div><span>현재 상태</span><strong>정식 배포</strong></div><div><span>배포 버전</span><strong>v1.1.0</strong></div>');
+ s=exact(s,'현재 제공되는 배포 자료에는 Windows 실행 파일이 포함되어 있지 않습니다.','배포 정보 확인: 2026.11.20 · Windows 실행형 프로그램, v1.1.0.');
+ return exact(s,'<div class="status-box"><small>배포 정보</small><strong>정식 배포</strong></div>','<div class="status-box"><small>배포 정보</small><strong>v1.1.0</strong></div>');
+ });
+ html=scoped(html,/<a class="catalog-line[^"]*" href="#\/projects\/drawing-editor">[\s\S]*?<\/a>/g,s=>exact(s,'<b>정식 배포</b><small></small>','<b>v1.1.0</b><small>정식 배포</small>'));
+ return html;
+}
+html=refreshProductReleases(html);
+function applyIntroPolicy(html){
+ const ensure=(cond,msg)=>{if(!cond)throw Error("intro policy: "+msg)};
+ function exact(from,to,n=1){ensure(html.split(from).length===n+1,"unexpected marker "+from.slice(0,100));html=html.split(from).join(to)}
+ const removed=[...html.matchAll(/<a class="button primary-download" href="https:\/\/github\.com\/Peter-msk\/[^"]+\/releases\/download\/[^"]+">프로그램 다운로드 ↓<\/a>/g)];
+ ensure(removed.length===7,"expected 7 original installer links");
+ for(const m of removed) exact(m[0],"");
+ const services=[["https://sunrise-pdf-editor.ko-pg.workers.dev/","#/projects/pdf-editor-web"],["https://sunrise-pdf-pro-web.ko-pg.workers.dev/","#/projects/pdf-pro-web"]];
+ for(const [url,route] of services){
+  exact('<a class="button secondary-service" href="'+url+'" rel="noopener noreferrer" target="_blank">웹 버전 바로가기 ↗</a>','<a class="button secondary-service" href="'+route+'">웹 버전 소개 →</a>');
+  exact('<a class="button primary-download" href="'+url+'" rel="noopener noreferrer" target="_blank">웹에서 사용하기 ↗</a>','');
+ }
+ exact("제품 상세 페이지에서 지원 환경과 배포 형태를 확인한 뒤 다운로드 버튼을 선택하세요. 설치 파일은 안내에 따라 설치하고, 단일 실행 파일은 실행해 사용할 수 있습니다. ZIP 파일은 압축을 해제한 뒤 포함된 안내를 확인하세요.","이 홈페이지는 프로그램의 기능, 지원 환경, 개발 및 배포 현황을 소개합니다. 설치파일과 직접 배포 경로는 홈페이지에서 제공하지 않습니다.");
+ exact("Drawing Editor는 어디에서 설치하나요?","Drawing Editor의 기능과 버전은 어디에서 확인하나요?");
+ exact("현재 제공되는 배포 자료에는 Windows 실행 파일이 포함되어 있지 않습니다. 실행 파일을 제공할 수 있게 되면 제품 상세 페이지에서 안내하겠습니다.","Drawing Editor 제품 상세 페이지에서 기능, 이용 형태 및 배포 버전을 확인할 수 있습니다. 이 홈페이지에서는 설치파일을 제공하지 않습니다.");
+ exact("각 플러그인의 지원 QGIS 버전과 검증 상태를 먼저 확인하세요. 공개된 설치 ZIP이 있는 경우 QGIS의 플러그인 관리 및 설치 메뉴에서 ZIP 설치를 사용합니다. 현재 확인되지 않은 공개 배포 링크는 표시하지 않습니다.","각 플러그인 소개 페이지에서 지원 QGIS 버전, 주요 기능 및 개발 상태를 확인할 수 있습니다. 이 홈페이지에서는 설치 ZIP 또는 직접 배포 링크를 제공하지 않습니다.");
+ // Image ZIP note originally assumes receipt of the package.
+ exact("압축 파일의 안내에 따라 내용을 확인해 주세요.","이용 형태와 배포 상태를 소개하며, 설치파일은 이 홈페이지에서 제공하지 않습니다.");
+ html=html.replace(/<div class="project-actions"><\/div>/g,"");
+ ensure(!/href\s*=\s*["'][^"']*\/releases\/download\//i.test(html),"direct release URL survived");
+ ensure(!/<a\b[^>]*class="[^"]*\bprimary-download\b/i.test(html),"download action survived");
+ ensure(!/프로그램 다운로드 ↓|권한 있는 계정으로 다운로드|비공개 저장소 · GitHub 로그인 및 접근 권한 필요/.test(html),"obsolete distribution copy survived");
+ ensure(!/<a\b[^>]*href="https?:\/\//i.test(html),"external action survived");
+ return html;
+}
+html=applyIntroPolicy(html);
+function refineProductFacts(html){
+ const data=[
+ ["finder","공개 미정","개발 중지","개발 중지·종료","PC 프로그램","개발 중지","공개 미정"],
+ ["eia-hub","개발 중","개발 중","개발 중","웹 프로젝트","개발 중",null],
+ ["eia-manager","개발 중","개발 중","개발 중","PC 프로그램","개발 중",null],
+ ["eiass-mobile","공개 미정","상태 확인 중","상태 확인 필요","모바일 프로젝트","상태 확인 중","공개 미정"],
+ ["gis","공개 미정","상태 확인 중","상태 확인 필요","공간정보 프로젝트","상태 확인 중","공개 미정"],
+ ["aermod","공개 미정","개발 중지","개발 중지·종료","대기확산 모델링 프로젝트","개발 중지","공개 미정"],
+ ["pdf-editor-web","웹 서비스","웹 브라우저","브라우저에서 이용","웹 서비스","웹 서비스 운영 중","웹 브라우저"],
+ ["pdf-pro-web","웹 서비스","웹 브라우저","브라우저에서 이용","웹 서비스","웹 서비스 운영 중","웹 브라우저"]];
+ const field=(name,value)=>'<div><span>'+name+'</span><strong>'+value+'</strong></div>';
+ const exact=(s,a,b)=>{if(s.split(a).length!==2)throw Error('product facts marker: '+a.slice(0,100));return s.replace(a,()=>b)};
+ for(const [id,form,state,guide,type,status,extra] of data){
+  const re=new RegExp('<template data-route="/projects/'+id+'">[\\s\\S]*?<\\/template>','g');let n=0;
+  html=html.replace(re,s=>{n++;
+   s=exact(s,field('이용 형태',form)+field('현재 상태',state)+field('이용 안내',guide),field('프로젝트 유형',type)+field('개발 및 운영 상태',status)+(extra?field(id.endsWith('-web')?'이용 환경':'공개 상태',extra):''));
+   if(!extra)s=exact(s,'class="section project-quick r19-specs" id="specifications"','class="section project-quick r19-specs r27-specs-two" id="specifications"');
+   return s;
+  });if(n!==1)throw Error('product facts route '+id);
+ }
+ const old='프로그램 화면을 준비하고 있습니다.';
+ if(html.split(old).length!==8)throw Error('expected 7 unregistered screenshot notices');
+ return html.replaceAll(old,'실제 실행 화면은 아직 등록하지 않았습니다.');
+}
+html=refineProductFacts(html);
+
+const previewSource=fs.readFileSync(path.join(__dirname,'..','source','r27','image-preview.js'),'utf8');
+check(!/<\/script/i.test(previewSource),'invalid preview source embedding');
+once("let hasRendered=false;",previewSource+"\nlet hasRendered=false;");
+once("if(link.dataset.image==='true'){e.preventDefault();const [head,base64]=link.href.split(',');const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));const url=URL.createObjectURL(new Blob([bytes],{type:head.slice(5).split(';')[0]}));window.open(url,'_blank','noopener');setTimeout(()=>URL.revokeObjectURL(url),60000)}","if(link.dataset.image==='true'){openProductPreview(e,link)}");
+once("render();queueProgress();\n})();\n</script><script id=\"sunrise-r21-motion\">","document.addEventListener('auxclick',e=>{const link=e.target.closest('a[data-image=\"true\"]');if(link)openProductPreview(e,link)});render();queueProgress();\n})();\n</script><script id=\"sunrise-r21-motion\">");
+check((html.match(/<a\b[^>]*data-image="true"[^>]*>/g)||[]).length===10,'expected 10 screenshot links');
+
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)];
 const main=scripts.filter(s=>s[1].includes('function r23SolarRender(figure)'));
 check(main.length===1, 'main script not found');
@@ -35,4 +116,4 @@ check((html.match(/<template data-route=/g)||[]).length===35,'route count change
 check(/<\/html>\s*$/i.test(html), 'invalid HTML closure');
 const bytes=Buffer.from(html,'utf8');
 fs.writeFileSync(output,bytes);
-console.log('R27 UI patch verified: 35 routes; 7 private download labels; inline JS syntax PASS; '+bytes.length+' bytes; SHA-256 '+crypto.createHash('sha256').update(bytes).digest('hex'));
+console.log('R27 UI patch verified: 35 routes; introduction-only policy; product versions refreshed; inline JS syntax PASS; '+bytes.length+' bytes; SHA-256 '+crypto.createHash('sha256').update(bytes).digest('hex'));

@@ -1,0 +1,26 @@
+name: Portal candidate QA
+on:
+  push:
+    branches: [site-detail-polish-20261120]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Native Node build
+        run: |
+          node --version
+          npm run build
+      - name: Install isolated browser test dependency
+        run: |
+          npm install --prefix "$RUNNER_TEMP/sunrise-qa" --no-package-lock --no-audit --no-fund playwright@1.51.1
+          "$RUNNER_TEMP/sunrise-qa/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Browser route and interaction QA
+        env:
+          NODE_PATH: ${{ runner.temp }}/sunrise-qa/node_modules
+        run: |
+          node scripts/qa-portal.cjs

@@ -21,7 +21,6 @@
 .catalog-line-meta{min-width:0}
 .r07-search-row input{border-radius:5px}
 .r07-search-row input:focus-visible{outline-offset:2px}
-.r27-download-note{display:block;flex-basis:100%;order:9;font-size:12px;line-height:1.6;max-width:100%;color:inherit;opacity:.9}
 .project-actions .button{max-width:100%;white-space:normal;text-align:center;justify-content:center;min-height:44px}
 .footer-top nav a{display:inline-flex;align-items:center;min-height:36px}
 @media(max-width:760px){
@@ -32,9 +31,38 @@
  .r19-cinema:has(.r23-solar) .r19-cinema-bottom{margin-top:4px;padding-top:14px}
  .mobile-menu>nav{max-height:calc(100dvh - var(--header) - 16px)}
  .project-actions{flex-wrap:wrap}
- .r27-download-note{margin-top:0}
 }
 @media(prefers-reduced-motion:reduce){
  .site-header .nav-card,.site-header .r07-nav-toggle,.site-header .r07-nav-toggle svg{transition:none}
  .catalog-line:hover{transform:none}
 }
+
+/* Detail refinement: local selectors only; preserve R27 layout and behavior. */
+.r27-solar-buttons button{cursor:pointer;overflow-wrap:anywhere}
+.r27-solar-buttons button:focus-visible{outline:2px solid #f1b07e;outline-offset:3px}
+.r27-solar-guide,.r27-solar-buttons{min-width:0;max-width:100%}
+.r27-solar-guide span,.catalog-line-meta{overflow-wrap:anywhere}
+.r07-search-row input{min-width:0;max-width:100%}
+.r07-submenu a:focus-visible,.mobile-menu nav a:focus-visible,.project-actions .button:focus-visible,.footer-top nav a:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
+.project-actions .button{min-width:0;overflow-wrap:anywhere}
+@media(max-width:360px){
+ .r27-solar-buttons{grid-template-columns:minmax(0,1fr)}
+ .r27-solar-buttons button{white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){
+ .r27-solar-buttons button,.project-actions .button,.catalog-line{transition:none}
+}
+
+/* Catalogue search control only; existing card structure remains unchanged. */
+.r07-search-row .r27-search-clear{min-height:44px;flex:0 0 auto;padding:6px 10px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.r07-search-row .r27-search-clear:disabled{opacity:.55;cursor:default}
+.r07-search-row .r27-search-clear:not(:disabled):hover{background:#f1f3ee}
+.r07-search-row .r27-search-clear:focus-visible{outline-offset:2px}
+@media(max-width:480px){.r07-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px}.r07-search-row .r07-result{grid-column:1/-1;white-space:normal}}
+
+/* Product facts and screenshot feedback: section-local finishing. */
+.sg3-product .r27-specs-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sg3-product .project-quick strong{overflow-wrap:anywhere}
+.r27-preview-status{font-size:12px;line-height:1.6;color:var(--muted);margin:6px 0;overflow-wrap:anywhere}
+.screen-full-link:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
+@media(max-width:360px){.sg3-product .r27-specs-two{grid-template-columns:1fr}}
