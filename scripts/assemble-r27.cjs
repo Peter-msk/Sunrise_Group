@@ -106,7 +106,7 @@ check(!/<\/script/i.test(previewSource),'invalid preview source embedding');
 once("let hasRendered=false;",previewSource+"\nlet hasRendered=false;");
 once("if(link.dataset.image==='true'){e.preventDefault();const [head,base64]=link.href.split(',');const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));const url=URL.createObjectURL(new Blob([bytes],{type:head.slice(5).split(';')[0]}));window.open(url,'_blank','noopener');setTimeout(()=>URL.revokeObjectURL(url),60000)}","if(link.dataset.image==='true'){openProductPreview(e,link)}");
 once("render();queueProgress();\n})();\n</script><script id=\"sunrise-r21-motion\">","document.addEventListener('auxclick',e=>{const link=e.target.closest('a[data-image=\"true\"]');if(link)openProductPreview(e,link)});render();queueProgress();\n})();\n</script><script id=\"sunrise-r21-motion\">");
-check((html.match(/<a\\b[^>]*data-image="true"[^>]*>/g)||[]).length===10,'expected 10 screenshot links');
+check((html.match(/<a\b[^>]*data-image="true"[^>]*>/g)||[]).length===10,'expected 10 screenshot links');
 
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)];
 const main=scripts.filter(s=>s[1].includes('function r23SolarRender(figure)'));
