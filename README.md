@@ -1,12 +1,21 @@
-# Sunrise Group — 공식 홈페이지 R32 메인 화면 재구성
+# Sunrise Group — 공식 홈페이지 R33 메인 UX·가독성 보완
 
 운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
 - 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 현재 운영 기준: R31
-- 개발 후보: R32 (branch `r32-homepage-information-architecture-20261121`)
+- 현재 운영 기준: R32
+- 개발 후보: R33 (branch `r33-home-navigation-readability-20261122`)
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
+
+## R33 메인 탐색 동선·모바일 가독성 보완
+
+- 사용자의 제품 탐색 목적을 반영해 메인 Primary CTA `개발 제품 살펴보기`를 불필요한 중간 페이지 이동 대신 바로 아래 B/D 제품 선택 영역 `#/#solutions`으로 연결합니다.
+- 메인 하단의 중복된 제품 이동 링크는 `개발 원칙 보기`로 역할을 분리하며 기존 `#purpose` 앵커를 재사용합니다.
+- PC·QGIS 두 제품 소개 아래에 `전체 제품 목록 보기`를 새로 두어 기존 `#/programs` 전체 안내를 잃지 않습니다.
+- 고정 헤더에 앵커 제목이 가려지지 않도록 scroll-margin을 지정하고, 모바일 제품 설명/개발 원칙 문구의 최소 표시 크기 및 링크 터치 영역을 개선합니다.
+- 이전 A+B+D 디자인, 3D 태양계 4개 제어, 34개 라우트, 제품 상세 25개와 정적 이미지 23개는 변경하지 않습니다.
+- 변경영향 집중 검증: `scripts/qa-r33-home.cjs`; 화면 증거 390/768/1440px; `docs/R33_HOME_WAYFINDING_AUDIT.md`.
 
 ## R32 메인 화면 정보구조 재구성
 
@@ -74,4 +83,4 @@ node scripts/qa-portal.cjs
 
 Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R28 빌드·검증을 수행한 뒤 기존 Worker에 배포한다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
 
-R32는 분리된 후보 브랜치에서 메인 화면의 반응형·스크롤·태양계 제어·링크·실제 이미지를 집중 검증한 뒤 PR 병합 및 운영 배포합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
+R33는 분리된 후보 브랜치에서 CTA·앵커 스크롤과 글자·터치 영역을 집중 검증한 뒤 PR 병합 및 운영 배포합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
