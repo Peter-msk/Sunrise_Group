@@ -42,7 +42,7 @@ const server=http.createServer((req,res)=>{
    for(let i=0;i<3;i++)assert.equal(await cards.nth(i).getAttribute('href'),links[i][1],'gateway '+links[i][0]+' at '+width);
    const luminance=await page.evaluate(()=>{
     const nodes=[document.querySelector('#r29-triad-title'),document.querySelector('.r29-triad-intro'),document.querySelector('.r29-triad-eyebrow')];
-    return nodes.map(el=>{const rgb=(getComputedStyle(el).color.match(/\\d+/g)||[]).slice(0,3).map(Number);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]});
+    return nodes.map(el=>{const rgb=(getComputedStyle(el).color.match(/\d+/g)||[]).slice(0,3).map(Number);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]});
    });
    assert.ok(luminance.every(v=>v<155),'home headings and lead must contrast with light section at '+width+': '+JSON.stringify(luminance));
    const bounds=await page.evaluate(()=>{
