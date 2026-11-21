@@ -5,7 +5,7 @@
 .sg3-page .r28-workflow ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none;counter-reset:r28-step}
 .sg3-page .r28-workflow li{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:start;gap:9px;min-width:0;padding-top:11px;border-top:2px solid color-mix(in srgb,var(--accent,#59766a) 48%,transparent);font-size:12px;line-height:1.7;color:var(--ink,#24312d);overflow-wrap:anywhere}
 .sg3-page .r28-step-index{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:color-mix(in srgb,var(--accent,#59766a) 12%,white);color:var(--accent,#3e6255);font-size:11px;font-weight:750;font-variant-numeric:tabular-nums}
-.sg3-page .r28-product-note,.sg3-page .r28-runtime-note{margin:14px 0 0;padding:12px 14px;border-left:3px solid #b88a4a;border-radius:0 7px 7px 0;background:#f5f2eb;color:#4d4b43;font-size:12px;line-height:1.75;overflow-wrap:anywhere}
+ .sg3-page .r28-product-note,.sg3-page .r28-runtime-note{grid-column:1/-1;margin:14px 0 0;padding:12px 14px;border-left:3px solid #b88a4a;border-radius:0 7px 7px 0;background:#f5f2eb;color:#4d4b43;font-size:12px;line-height:1.75;overflow-wrap:anywhere}
 .sg3-page .r28-runtime-note{border-left-color:#7b8e83;background:#eef2ef;color:#33453b}
 .sg3-page .r28-catalogue-note{margin:10px 0 0;padding:11px 13px;border:1px solid var(--line,#dce2dc);border-radius:7px;background:var(--paper,#fff);color:var(--muted,#66716b);font-size:12px;line-height:1.7}
 .sg3-page .catalog-line p{line-height:1.68;overflow-wrap:anywhere}
