@@ -86,7 +86,7 @@ const count=r=>(html.match(r)||[]).length;
 ok(count(/<template data-route="/g)===34,'34 routes');
 ok(count(/class="r28-workflow" id="workflow"/g)===25,'25 workflows');
 ok(count(/class="r31-workflow-jump"/g)===25,'25 workflow shortcuts');
-ok(count(/r35-photo-thumb/g)===8,'7 thumbnails + 1 CSS rule');
+ok(count(/class="sg3-product-object r04-thumb r35-photo-thumb"/g)===7,'7 product catalogue images');
 ok(count(/class="r12-hero-proof r20-visual-stage r35-real-screenshot"/g)===4,'4 concept panels replaced');
 const temp=path.join(root,'public','.index-r35.tmp');
 try{fs.writeFileSync(temp,html,'utf8');fs.renameSync(temp,out);}finally{if(fs.existsSync(temp))fs.unlinkSync(temp);}
