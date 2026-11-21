@@ -260,7 +260,7 @@ html = html.replace(/<template data-route="([^"]+)">([\s\S]*?)<\/template>/g, (t
   });
   return template.replace(content, updatedContent);
 });
-check(imageTags === 17, 'expected 18 optimized image tags, got ' + imageTags);
+check(imageTags === 17, 'expected 17 optimized image tags, got ' + imageTags);
 check(eagerImages === 12, 'expected 12 route-leading eager images, got ' + eagerImages);
 check(!/data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]{128,}/i.test(html), 'inline base64 image payload remains');
 check((html.match(/<template data-route="/g) || []).length === 34, 'expected 34 final route templates');
