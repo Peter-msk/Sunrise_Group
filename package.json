@@ -2,7 +2,7 @@
   "name": "sg-portal-8e4c71b9",
   "private": true,
   "scripts": {
-    "build": "node scripts/assemble-r27.cjs",
+    "build": "node scripts/assemble-r28.cjs",
     "predeploy": "npm run build",
     "deploy": "npx --yes cf@1.0.0-rc.1 deploy ./public --force"
   },
