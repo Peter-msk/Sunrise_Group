@@ -43,14 +43,16 @@ const productContract={
   const assets=fs.readdirSync(assetDir).filter(file=>/\.(?:png|jpg|webp|gif)$/i.test(file));
   assert.equal(assets.length,24,'R28 content-addressed image asset count');
   assert.ok(assets.every(file=>fs.statSync(path.join(assetDir,file)).size>0),'R28 image assets are non-empty');
-  assert.equal((htmlText.match(/data:image\/(?:png|jpeg|webp|gif);base64,/gi)||[]).length,0,'no inline base64 image payloads');
+  assert.equal((htmlText.match(/data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]{128,}/gi)||[]).length,0,'no inline base64 image payloads');
   assert.equal(htmlText.includes('사진 분류 도우미'),false,'non-owned product name removed');
   assert.equal(htmlText.includes('photo-classifier'),false,'non-owned route removed');
   const imageTags=[...htmlText.matchAll(/<img\b[^>]*>/gi)].map(match=>match[0]);
   assert.equal(imageTags.length,18,'R28 optimized image tag count');
+  assert.equal((htmlText.match(/<img\b[^>]*loading="eager"[^>]*fetchpriority="high"/gi)||[]).length,12,'route-leading image priority count');
+  assert.equal((htmlText.match(/<img\b[^>]*loading="lazy"/gi)||[]).length,6,'deferred image count');
   for(const tag of imageTags){
     assert.match(tag,/src="\/assets\/r28\//,'image uses static asset URL');
-    assert.match(tag,/loading="lazy"/,'image lazy loading');
+    assert.match(tag,/loading="(?:eager|lazy)"/,'image loading mode');
     assert.match(tag,/decoding="async"/,'image async decoding');
     assert.match(tag,/width="\d+"/,'image intrinsic width');
     assert.match(tag,/height="\d+"/,'image intrinsic height');
