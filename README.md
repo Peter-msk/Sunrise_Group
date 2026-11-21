@@ -1,12 +1,21 @@
-# Sunrise Group — 공식 홈페이지 R31 A+B+D 디자인 3차 보완
+# Sunrise Group — 공식 홈페이지 R32 메인 화면 재구성
 
 운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
 - 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 현재 운영 기준: R30
-- 개발 후보: R31 (branch `r31-product-detail-wayfinding-20261121`)
+- 현재 운영 기준: R31
+- 개발 후보: R32 (branch `r32-homepage-information-architecture-20261121`)
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
+
+## R32 메인 화면 정보구조 재구성
+
+- 원래의 A 시네마틱 + B 하이엔드 기술기업 + D 공간정보 전문기술기업 테마를 **A/B/D 세 개의 유사한 카드**로 나열하지 않고 역할에 맞게 분담합니다.
+- **A / 메인:** 태양계는 실제 3D 코드·조작 버튼·PBR 모델을 보존한 채 정보 중심의 2단 히어로에 배치하고, 핵심 문장과 **개발 제품 살펴보기** Primary CTA를 한눈에 표시합니다.
+- 태양계의 필수 제어를 제거하지 않고 Native `details` 하나 아래 정리해 모바일에서 4개 제어 버튼이 첫 화면을 장악하지 않도록 개선합니다.
+- **B/D / 제품:** 16개 PC·웹 프로그램 및 9개 QGIS 제품을 2개의 실제 이미지 기반 영역으로 안내하며, 개념용 QGIS 이미지를 실제 QGIS 실행 화면으로 오인하지 않도록 출처·성격을 정확히 표시합니다.
+- 중복된 그룹 소개·이념·미래 소개를 하나의 편집형 개발 철학 영역과 간결한 후속 방향 영역으로 재구성합니다. 기존 `#purpose` 및 브랜드 관련 외부/내부 안내 링크를 보존합니다.
+- 기존 34개 라우트, 25개 제품 상세, 태양계 WebGL, 실제 QGIS 검증 표시 및 23개 SHA 이미지 자산을 변경하지 않습니다. 변경영향 집중 검증: `scripts/qa-r32-home.cjs`, 보고서 `docs/R32_HOME_REDESIGN_AUDIT.md`.
 
 ## R31 디자인 3차 보완
 
@@ -65,4 +74,4 @@ node scripts/qa-portal.cjs
 
 Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R28 빌드·검증을 수행한 뒤 기존 Worker에 배포한다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
 
-R31은 별도 후보 브랜치에서 25개 상세의 PC·모바일 실동작 검증에 통과한 뒤 PR을 통해 main 반영 및 운영 배포합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
+R32는 분리된 후보 브랜치에서 메인 화면의 반응형·스크롤·태양계 제어·링크·실제 이미지를 집중 검증한 뒤 PR 병합 및 운영 배포합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
