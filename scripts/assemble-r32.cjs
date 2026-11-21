@@ -51,7 +51,7 @@ const home=[
    scene,
   '</div>',
  '</div>',
- '<div class="r32-hero-foot"><span>하나의 철학에서 시작한 기술</span><a href="#/#solutions">솔루션 분야 보기 <span aria-hidden="true">↓</span></a></div>',
+ '<div class="r32-hero-foot"><span>하나의 철학에서 시작한 기술</span><div class="r19-cinema-links"><a href="#/#solutions">솔루션 분야 보기 <span aria-hidden="true">↓</span></a></div></div>',
 '</section>',
 '<section class="r32-solutions" id="solutions" aria-labelledby="r32-solutions-title">',
  '<header class="r32-section-intro">',
@@ -69,8 +69,8 @@ const home=[
   '</a>',
  '</div>',
 '</section>',
-'<section class="r32-ethos" id="purpose" aria-labelledby="r32-ethos-title">',
- '<div class="r32-ethos-lead">',
+'<section class="r32-ethos r19-values-section" aria-labelledby="r32-ethos-title">',
+ '<div class="r32-ethos-lead" id="purpose">',
   '<p class="r32-overline">WHY SUNRISE <span aria-hidden="true">/</span> 일하는 방식을 바꾸는 기술</p>',
   '<h2 id="r32-ethos-title">기능보다,<br>실제 쓰임을 먼저.</h2>',
   '<p>반복되는 문서 작업과 환경영향평가, 공간정보 분석에는 많은 시간이 필요합니다. Sunrise Group은 업무 현장에서 필요한 기능을 중심으로 소프트웨어를 설계하고, 실제 사용 과정에서 발견되는 문제를 개선합니다.</p>',
@@ -83,7 +83,7 @@ const home=[
   '<a class="r32-text-link" href="#/philosophy">개발 이념과 원칙 <span aria-hidden="true">↗</span></a>',
  '</div>',
 '</section>',
-'<section class="r32-future" aria-label="앞으로의 방향">',
+'<section class="r32-future r19-end" aria-label="앞으로의 방향">',
  '<p class="r32-overline">LOOKING AHEAD</p>',
  '<h2>업무와 기술이<br>자연스럽게 연결되도록.</h2>',
  '<div><p>개별 업무 도구를 넘어, 문서와 공간정보가 자연스럽게 연결되는 업무 환경을 만들어갑니다.</p><a href="#/future">미래 방향 알아보기 <span aria-hidden="true">↗</span></a></div>',
@@ -93,6 +93,7 @@ const home=[
 check(!home.includes('r29-triad'),'no duplicate theme cards');
 check(home.includes(scene),'existing solar markup embedded');
 check((home.match(/<h1\b/g)||[]).length===1,'single semantic homepage h1');
+check(home.includes('class="r19-cinema-links"')&&home.includes('class="r32-ethos r19-values-section"')&&home.includes('class="r32-future r19-end"'),'legacy chapter navigation hooks preserved');
 check((home.match(/class="r32-domain /g)||[]).length===2,'two clear product categories');
 check((home.match(/class="r23-stage"/g)||[]).length===1,'one solar stage');
 check((home.match(/class="r27-solar-controls"/g)||[]).length===1,'all old solar buttons still available');
