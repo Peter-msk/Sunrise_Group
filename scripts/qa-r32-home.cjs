@@ -128,7 +128,7 @@ const out=process.env.SUNRISE_QA_ARTIFACT_DIR;
      assert.equal(new URL(page.url()).hash,'#/programs','hero primary navigation '+width);
      await page.goto(origin,{waitUntil:'domcontentloaded'});
      await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/');
-     await page.locator('#page-outlet .r32-hero-foot a').click();
+     await page.locator('#page-outlet .r32-hero-foot a[href="#/#solutions"]').click();
      await page.waitForFunction(()=>location.hash==='#/#solutions');
      await page.waitForFunction(()=>{const e=document.querySelector('#page-outlet #solutions');if(!e)return false;const r=e.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0;});
    }
