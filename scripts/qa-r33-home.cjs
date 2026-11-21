@@ -95,7 +95,7 @@ const dir=process.env.SUNRISE_QA_ARTIFACT_DIR;
    await clickAndCheck('#/#solutions','solutions');heroClicks++;
    await page.goto(url,{waitUntil:'domcontentloaded'});
    await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/');
-   await page.locator('#page-outlet .r32-hero-foot a[href="#/#purpose"]').click();
+   await page.locator('#page-outlet .r32-hero-foot .r19-cinema-links > a[href="#/#purpose"]').click();
    await page.waitForFunction(()=>location.hash==='#/#purpose');
    await page.waitForFunction(()=>{
     const e=document.querySelector('#page-outlet #purpose');if(!e)return false;
