@@ -41,15 +41,15 @@ const productContract={
   const publicDir=path.resolve('public');
   const assetDir=path.join(publicDir,'assets','r28');
   const assets=fs.readdirSync(assetDir).filter(file=>/\.(?:png|jpg|webp|gif)$/i.test(file));
-  assert.equal(assets.length,24,'R28 content-addressed image asset count');
+  assert.equal(assets.length,23,'R28 content-addressed image asset count');
   assert.ok(assets.every(file=>fs.statSync(path.join(assetDir,file)).size>0),'R28 image assets are non-empty');
   assert.equal((htmlText.match(/data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]{128,}/gi)||[]).length,0,'no inline base64 image payloads');
   assert.equal(htmlText.includes('사진 분류 도우미'),false,'non-owned product name removed');
   assert.equal(htmlText.includes('photo-classifier'),false,'non-owned route removed');
   const imageTags=[...htmlText.matchAll(/<img\b[^>]*>/gi)].map(match=>match[0]);
-  assert.equal(imageTags.length,18,'R28 optimized image tag count');
+  assert.equal(imageTags.length,17,'R28 optimized image tag count');
   assert.equal((htmlText.match(/<img\b[^>]*loading="eager"[^>]*fetchpriority="high"/gi)||[]).length,12,'route-leading image priority count');
-  assert.equal((htmlText.match(/<img\b[^>]*loading="lazy"/gi)||[]).length,6,'deferred image count');
+  assert.equal((htmlText.match(/<img\b[^>]*loading="lazy"/gi)||[]).length,5,'deferred image count');
   for(const tag of imageTags){
     assert.match(tag,/src="\/assets\/r28\//,'image uses static asset URL');
     assert.match(tag,/loading="(?:eager|lazy)"/,'image loading mode');
@@ -61,6 +61,9 @@ const productContract={
   const qgisTemplate=(htmlText.match(/<template data-route="\/programs\/qgis">([\s\S]*?)<\/template>/)||[])[1];
   assert.ok(qgisTemplate,'QGIS catalogue route exists');
   assert.equal((qgisTemplate.match(/<a class="catalog-line[^"]*" href="#\/projects\//g)||[]).length,9,'nine owned QGIS plugins');
+  const pluginManagementGroup=(qgisTemplate.match(/<section class="catalog-group r19-atlas-group r28-no-group-art"[^>]*>[\\s\\S]*?<\\/section>/)||[])[0];
+  assert.ok(pluginManagementGroup,'owned QGIS plugin-management group exists');
+  assert.equal(pluginManagementGroup.includes('r19-group-art'),false,'non-owned field-photo group artwork removed');
   assert.match(qgisTemplate,/개발 완료 6개/);
   assert.match(qgisTemplate,/개발 중 3개/);
   assert.equal((htmlText.match(/class="r28-workflow"/g)||[]).length,25,'all product details have workflow sections');
