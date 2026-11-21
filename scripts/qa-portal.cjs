@@ -406,6 +406,23 @@ const productContract={
           }
         }
       }
+      if(process.env.SUNRISE_QA_ARTIFACT_DIR && (width===1440||width===390)){
+        const visualDir=path.join(process.env.SUNRISE_QA_ARTIFACT_DIR,String(width));
+        fs.mkdirSync(visualDir,{recursive:true});
+        for(const route of ['/','/programs/pc','/programs/qgis','/projects/finder','/projects/drawing-editor','/projects/eiass','/projects/qgis-tool']){
+          current=route;
+          await page.evaluate(r=>{location.hash='#'+r},route);
+          await page.waitForFunction(r=>location.hash==='#'+r&&document.querySelector('#page-outlet')?.dataset.route===r,route,{timeout:7000});
+          await page.evaluate(async()=>{
+            const imgs=[...document.querySelectorAll('#page-outlet img[loading="lazy"]')];
+            imgs.forEach(img=>{img.loading='eager';});
+            await Promise.all([...document.querySelectorAll('#page-outlet img')].map(img=>img.decode().catch(()=>{})));
+          });
+          const slug=route==='/'?'home':route.slice(1).replaceAll('/','-');
+          await page.screenshot({path:path.join(visualDir,slug+'.png'),fullPage:true,animations:'disabled'});
+        }
+        console.log('Visual evidence captured: '+width+'px / 7 routes.');
+      }
       await context.close();
       console.log('Viewport completed: '+width+' / routes '+chosen.length);
     }
