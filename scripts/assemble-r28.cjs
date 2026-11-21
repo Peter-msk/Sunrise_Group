@@ -31,16 +31,13 @@ function patchTemplate(route, mutate) {
   html = html.slice(0, start) + after + html.slice(end);
 }
 function patchCard(template, route, description) {
-  const marker = 'href="#' + route + '"';
-  const start = template.indexOf(marker);
-  check(start >= 0, 'catalogue card missing ' + route);
-  const cardStart = template.lastIndexOf('<a class="catalog-line', start);
-  const cardEnd = template.indexOf('</a>', start);
-  check(cardStart >= 0 && cardEnd >= 0, 'catalogue card boundary missing ' + route);
-  const card = template.slice(cardStart, cardEnd + 4);
-  check((card.match(/<p(?:\s[^>]*)?>/g) || []).length === 1, 'catalogue description marker mismatch ' + route);
-  const updated = card.replace(/<p(?:\s[^>]*)?>[\s\S]*?<\/p>/, '<p>' + escapeHtml(description) + '</p>');
-  return template.slice(0, cardStart) + updated + template.slice(cardEnd + 4);
+  const pattern = new RegExp('<a class="catalog-line[^"]*" href="#' + route + '">[\\s\\S]*?<\\/a>');
+  const match = template.match(pattern);
+  check(!!match, 'catalogue card missing ' + route);
+  const card = match[0];
+  check((card.match(/<p(?:\\s[^>]*)?>/g) || []).length === 1, 'catalogue description marker mismatch ' + route);
+  const updated = card.replace(/<p(?:\\s[^>]*)?>[\\s\\S]*?<\\/p>/, '<p>' + escapeHtml(description) + '</p>');
+  return template.replace(card, updated);
 }
 function patchProductDetail(route, data) {
   patchTemplate(route, template => {
