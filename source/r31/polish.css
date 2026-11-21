@@ -1,0 +1,24 @@
+/* R31: unified product-detail wayfinding for all 25 routes. Scoped to data-design-family. */
+main.sg3-product[data-design-family] .r19-product-jump{display:flex;flex-wrap:wrap;align-items:center;gap:0 clamp(10px,1.8vw,24px);min-width:0}
+main.sg3-product[data-design-family] .r19-product-jump>a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;max-width:100%;padding-block:9px;white-space:normal;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
+main.sg3-product[data-design-family] .r19-product-jump>a.r31-workflow-jump{font-weight:750;color:var(--r30-domain,#3d6554);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
+main.sg3-product[data-design-family] .r19-product-jump>a.r31-workflow-jump:hover{color:var(--ink,#182b27)}
+main.sg3-product[data-design-family] .r19-product-jump>a:focus-visible{outline:2px solid var(--r30-domain,#a26040);outline-offset:2px}
+main.sg3-product[data-design-family] #workflow{scroll-margin-top:calc(var(--header,64px) + 22px);outline-offset:4px}
+main.sg3-product[data-design-family] #workflow:focus-visible{outline:2px solid var(--r30-domain,#3c715c)}
+/* The product identity connects the A+B+D portal and product-specific content without changing copy. */
+main.sg3-product[data-design-family] .project-hero .eyebrow{border-inline-start:3px solid var(--r30-domain,#3b705a);padding-inline-start:10px;line-height:1.55}
+main.sg3-product[data-design-family] .r28-workflow{max-width:100%;min-width:0}
+main.sg3-product[data-design-family] .r28-workflow li{min-width:0;overflow-wrap:anywhere}
+@media(max-width:760px){
+ main.sg3-product[data-design-family] .r19-product-jump{gap:2px 13px;align-items:stretch}
+ main.sg3-product[data-design-family] .r19-product-jump>a{min-height:44px;flex:0 0 auto;font-size:12px;line-height:1.55;padding:10px 0}
+ main.sg3-product[data-design-family] .r28-workflow{scroll-margin-top:calc(var(--header,64px) + 16px)}
+}
+@media(max-width:360px){
+ main.sg3-product[data-design-family] .r19-product-jump{gap:2px 11px}
+ main.sg3-product[data-design-family] .r19-product-jump>a{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+ main.sg3-product[data-design-family] .r19-product-jump>a{scroll-behavior:auto}
+}
