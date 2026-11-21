@@ -14,8 +14,8 @@
 - 제품별 상세 페이지에 기능 설명과 3단계 작업 흐름을 추가한다.
 - 개발 상태, 공개 배포 여부, 실제 QGIS Runtime 검증을 분리해 표시한다.
 - 외부 개발 제품 목록과 상세 경로를 제거하고 QGIS 카탈로그 집계·그룹 수를 9개 기준으로 갱신한다.
-- 37개 이미지 참조를 24개 content-addressed 정적 파일로 외부화하고 중복 payload를 제거한다.
-- 각 경로의 첫 이미지 12개는 `loading=eager` + `fetchpriority=high`, 나머지 6개는 `loading=lazy`로 처리한다. 모든 이미지에 `decoding=async`와 intrinsic width/height를 지정한다.
+- 36개 이미지 참조를 23개 content-addressed 정적 파일로 외부화하고 중복 payload를 제거한다.
+- 각 경로의 첫 이미지 12개는 `loading=eager` + `fetchpriority=high`, 나머지 5개는 `loading=lazy`로 처리한다. 모든 이미지에 `decoding=async`와 intrinsic width/height를 지정한다.
 - 3D 태양계의 9개 행성 텍스처는 홈 태양계 장면이 실제 viewport에 들어올 때만 요청한다. 다른 제품 페이지에서는 불필요한 텍스처 다운로드를 하지 않는다.
 - 이미지 확대는 동일 출처의 정적 자산만 열도록 제한한다.
 - R28 전용 CSS·이미지 프리뷰·제품 설명 데이터는 `source/r28/`에 격리한다. R25 원본 조각과 R27 overlay는 변경하지 않는다.
