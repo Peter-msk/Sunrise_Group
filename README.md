@@ -1,12 +1,22 @@
-# Sunrise Group — 공식 홈페이지 R34 최종 소스 관리·배포
+# Sunrise Group — 공식 홈페이지 R35 사용자 제공 실기화면 적용
 
 운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
 - 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 소스 기준 버전: R34 (배포 결과는 Cloudflare 빌드·실서비스 확인 기준)
-- 최종 후보 브랜치: `r34-final-source-first-release-20261122`
+- 소스 기준 버전: R35 (실제 배포 성공 여부는 Cloudflare 운영 검증 기준)
+- 최종 후보 브랜치: `r35-actual-product-screenshots-20261122`
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
+
+## R35 실제 프로그램 화면 적용
+
+- 2026-11-21 사용자가 제공한 7개의 프로그램 실제 실행 화면을 원본으로 하여 외곽 데스크톱 배경을 제거하고 WebP로 최적화합니다. AI 생성 이미지는 홈페이지에 사용하지 않습니다.
+- 실제 화면 대상: Cleaner v3.7.7, EIASS v4.7.0, PDF Editor v4.6.3, Finder v2.1.2, Image, EIA Data Hub, Drawing Editor v1.1.0.
+- 원본 화면과 동일한 구조를 유지하며, 로컬 저장 경로의 일부만 공개용으로 가려 개인정보 노출 위험을 줄입니다. 실제 제품 기능이나 버전은 추측해 추가하지 않습니다.
+- 7개 WebP 실기화면은 **`source/r35/screenshots/`**에 Git 관리되는 자산으로 보존합니다. **`public/index.html`, `public/assets/r35`는 빌드 시 생성**되며 Git에 커밋하지 않습니다.
+- 7개 제품 상세 페이지의 실제 화면과 PC 프로그램 목록의 7개 미리보기를 교체합니다. 이전에 개념 모션만 사용하던 Finder / Image / EIA Data Hub / Drawing Editor는 실제 실행 화면으로 바꿉니다.
+- 제품별 개발·배포 상태, QGIS 분리, 3D 태양계, 34개 경로, 25개 상세 화면은 그대로 둡니다.
+- R35 변경영향 QA: `scripts/qa-r35-source.cjs` 및 `scripts/qa-r35-screens.cjs` (실이미지 체크섬·7개 제품별 PC·모바일 이미지 로딩·캡처, 기존 34개 경로·25개 작업흐름 유지).
 
 ## R34 최종 소스 중심 운영
 
