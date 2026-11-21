@@ -68,7 +68,7 @@ const screenshotDir=process.env.SUNRISE_QA_ARTIFACT_DIR;
     assert.equal(layout.workflow,true,'workflow visible in live route '+route);
     assert.equal(layout.tabindex,'-1','workflow programmable focus '+route);
     assert.ok(layout.width<=width+2,'document horizontal overflow '+route+' at '+width+': '+layout.width);
-    assert.ok(layout.jumpRect.width>=55&&layout.jumpRect.height>=40,'touch target usable '+route+' at '+width+': '+JSON.stringify(layout.jumpRect));
+    assert.ok(layout.jumpRect.width>=44&&layout.jumpRect.height>=44,'touch target usable '+route+' at '+width+': '+JSON.stringify(layout.jumpRect));
     assert.ok(layout.jumpRect.left>=-1&&layout.jumpRect.right<=width+1,'jump link within viewport '+route+' at '+width);
     assert.ok(layout.navDisplay==='flex'&&layout.navWrap==='wrap','responsive nav wraps '+route+' at '+width);
     assert.ok(layout.accent.trim().length>0,'domain accent inherited '+route);
