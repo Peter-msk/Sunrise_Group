@@ -1,12 +1,21 @@
-# Sunrise Group — 공식 홈페이지 R30 A+B+D 디자인 2차 보완
+# Sunrise Group — 공식 홈페이지 R31 A+B+D 디자인 3차 보완
 
 운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
 - 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 현재 운영 기준: R29
-- 개발 후보: R30 (branch `r30-visual-coherence-audit-20261121`)
+- 현재 운영 기준: R30
+- 개발 후보: R31 (branch `r31-product-detail-wayfinding-20261121`)
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
+
+## R31 디자인 3차 보완
+
+- 25개 제품 상세의 `작업 흐름` 콘텐츠를 페이지 상단 제품 안내 메뉴에서 바로 접근하도록 내부 링크·스크롤 대상 1:1로 연결합니다.
+- 모바일에서는 `제품 안내 바로가기`를 줄바꿈 가능한 44px 이상의 명확한 탐색 항목으로 구성합니다.
+- A+B+D 제품별 분야 색상 토큰과 제목·작업흐름·포커스 표시를 일관되게 연결합니다.
+- 메인 태양계, R29 세 디자인 축, R30 제품 수량, 25개 기존 상세 설명·정적 이미지·제품 상태 정책은 변경하지 않습니다.
+- 25개 전 제품의 PC(1440px)·모바일(390px) 실제 경로 및 스크롤 목표 도달을 검사하며 대표 8개 캡처를 확인합니다.
+- 변경영향 QA와 안전 경계: `docs/R31_PRODUCT_DETAIL_QA.md`.
 
 ## R30 디자인 2차 보완
 
@@ -46,7 +55,7 @@ npm run build
 node scripts/qa-portal.cjs
 ```
 
-- `scripts/assemble-r29.cjs`는 R28을 호출하고 R29 디자인만 추가합니다. 기존 `scripts/assemble-r28.cjs`는 R27 검증 빌드를 호출한 뒤 R28의 제품 설명·레이아웃·이미지 최적화를 적용한다.
+- `scripts/assemble-r31.cjs`는 R30까지 빌드한 뒤 상세 탐색만 보완합니다. R30→R29→R28→R27 순서로 기준본을 보존합니다. `scripts/assemble-r29.cjs`는 R28을 호출하고 R29 디자인만 추가합니다. 기존 `scripts/assemble-r28.cjs`는 R27 검증 빌드를 호출한 뒤 R28의 제품 설명·레이아웃·이미지 최적화를 적용한다.
 - `source/r28/products.json`은 제품 카드·상세 소개·기능·작업 흐름·검증 주의사항의 단일 콘텐츠 원장이다.
 - `public/assets/r28/`는 빌드 산출물이며 Git에 별도 저장하지 않는다. 파일명은 SHA-256 기반이다.
 - QA는 34개 라우트, PC 16개, QGIS 9개, 25개 상세 작업흐름, 이미지 자산 로딩·확대, PC/모바일 반응형 및 기존 내비게이션 계약을 확인한다.
@@ -56,4 +65,4 @@ node scripts/qa-portal.cjs
 
 Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R28 빌드·검증을 수행한 뒤 기존 Worker에 배포한다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
 
-R29은 별도 후보 브랜치에서 빌드와 집중 QA를 통과한 뒤 PR을 통해 main 반영 및 운영 배포합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
+R31은 별도 후보 브랜치에서 25개 상세의 PC·모바일 실동작 검증에 통과한 뒤 PR을 통해 main 반영 및 운영 배포합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
