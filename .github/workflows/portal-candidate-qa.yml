@@ -1,7 +1,7 @@
 name: Portal candidate QA
 on:
-  push:
-    branches: [site-detail-polish-20261120]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
@@ -22,5 +22,14 @@ jobs:
       - name: Browser route and interaction QA
         env:
           NODE_PATH: ${{ runner.temp }}/sunrise-qa/node_modules
+          SUNRISE_QA_ARTIFACT_DIR: ${{ runner.temp }}/sunrise-portal-screens
         run: |
           node scripts/qa-portal.cjs
+      - name: Upload visual QA evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sunrise-group-r28-visual-qa
+          path: ${{ runner.temp }}/sunrise-portal-screens/
+          if-no-files-found: ignore
+          retention-days: 3

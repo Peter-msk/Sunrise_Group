@@ -1,0 +1,29 @@
+/* R28: scoped product detail, catalogue readability and image loading refinements. */
+.sg3-page .r28-copy{max-width:68ch;line-height:1.82;letter-spacing:-.01em}
+.sg3-page .r28-workflow{margin-top:22px;padding:18px 18px 16px;border:1px solid var(--line,#dce2dc);border-radius:10px;background:color-mix(in srgb,var(--paper,#fff) 92%,var(--surface,#eef1ec))}
+.sg3-page .r28-workflow h3{margin:0 0 14px;font-size:15px;line-height:1.45;letter-spacing:-.02em;color:var(--ink,#24312d)}
+.sg3-page .r28-workflow ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none;counter-reset:r28-step}
+.sg3-page .r28-workflow li{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:start;gap:9px;min-width:0;padding-top:11px;border-top:2px solid color-mix(in srgb,var(--accent,#59766a) 48%,transparent);font-size:12px;line-height:1.7;color:var(--ink,#24312d);overflow-wrap:anywhere}
+.sg3-page .r28-step-index{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:color-mix(in srgb,var(--accent,#59766a) 12%,white);color:var(--accent,#3e6255);font-size:11px;font-weight:750;font-variant-numeric:tabular-nums}
+ .sg3-page .r28-product-note,.sg3-page .r28-runtime-note{grid-column:1/-1;margin:14px 0 0;padding:12px 14px;border-left:3px solid #b88a4a;border-radius:0 7px 7px 0;background:#f5f2eb;color:#4d4b43;font-size:12px;line-height:1.75;overflow-wrap:anywhere}
+.sg3-page .r28-runtime-note{border-left-color:#7b8e83;background:#eef2ef;color:#33453b}
+.sg3-page .r28-catalogue-note{margin:10px 0 0;padding:11px 13px;border:1px solid var(--line,#dce2dc);border-radius:7px;background:var(--paper,#fff);color:var(--muted,#66716b);font-size:12px;line-height:1.7}
+.sg3-page .catalog-line p{line-height:1.68;overflow-wrap:anywhere}
+.sg3-page img.r28-optimized-image{display:block;max-width:100%;height:auto}
+.sg3-page .r28-workflow,.sg3-page .r28-product-note,.sg3-page .r28-runtime-note{overflow-wrap:anywhere}
+@media(max-width:760px){
+ .sg3-page .r28-workflow{padding:15px 13px}
+ .sg3-page .r28-workflow ol{grid-template-columns:minmax(0,1fr);gap:8px}
+ .sg3-page .r28-workflow li{grid-template-columns:26px minmax(0,1fr);padding-top:9px}
+ .sg3-page .r28-product-note,.sg3-page .r28-runtime-note{font-size:11.5px}
+}
+@media(prefers-reduced-motion:reduce){
+ .sg3-page .r28-workflow *{scroll-behavior:auto;transition:none!important;animation:none!important}
+}
+
+/* The former field-photo review group now contains only the owned QGIS catalog manager. */
+.sg3-page .r19-atlas-group.r28-no-group-art{grid-template-columns:minmax(0,1fr);gap:10px}
+.sg3-page .r19-atlas-group.r28-no-group-art .catalog-group-heading{grid-template-columns:minmax(0,1fr)}
+.sg3-page .r19-atlas-group.r28-no-group-art .catalog-group-heading h3,
+.sg3-page .r19-atlas-group.r28-no-group-art .catalog-group-heading p{grid-column:1}
+.sg3-page .r19-atlas-group.r28-no-group-art .catalog-lines{grid-column:1/-1}
