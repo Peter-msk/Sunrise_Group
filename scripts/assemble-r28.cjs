@@ -28,6 +28,12 @@ const r28MainScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/scrip
 check(r28MainScripts.length === 1, 'expected one R28 main rendering script');
 new vm.Script(r28MainScripts[0][1], { filename: 'sunrise-r28-inline.js' });
 check(html.includes("figure.dataset.r15PlanetPreloadRequested==='true'"), 'solar texture lazy-load guard missing');
+const planetMapStart = html.indexOf('const R15_PLANET_DATA=');
+const planetObjectStart = html.indexOf('{', planetMapStart);
+const planetObjectEnd = html.indexOf('},R15_PLANET_IMAGES=', planetObjectStart);
+check(planetMapStart >= 0 && planetObjectEnd > planetObjectStart, 'solar texture manifest boundary missing');
+const planetAssetUrls = Object.values(JSON.parse(html.slice(planetObjectStart, planetObjectEnd + 1)));
+check(planetAssetUrls.length === 9 && planetAssetUrls.every(url => url.startsWith('/assets/r28/')), 'all nine solar textures must be externalized static assets');
 function patchTemplate(route, mutate) {
   const marker = '<template data-route="' + route + '">';
   const start = html.indexOf(marker);
