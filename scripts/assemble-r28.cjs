@@ -104,6 +104,11 @@ patchTemplate('/programs/pc', template => {
     if (!['capture','file-manager','cleaner','pdf-editor','pdf-pro','image','drawing-editor','eiass','finder','eia-manager','pdf-editor-web','pdf-pro-web','eia-hub','eiass-mobile','gis','aermod'].some(id => route === '/projects/' + id)) continue;
     next = patchCard(next, route, data.cardDescription);
   }
+  const finderCardPattern = /<a class="catalog-line[^"]*" href="#\/projects\/finder">[\s\S]*?<\/a>/;
+  const finderCard = next.match(finderCardPattern);
+  check(!!finderCard, 'Sunrise Finder catalogue card missing');
+  const finderCardUpdated = replaceOne(finderCard[0], '<b>개발 중지</b>', '<b>v2.1.2</b>', 'Sunrise Finder last public version');
+  next = next.replace(finderCard[0], finderCardUpdated);
   return next;
 });
 patchTemplate('/programs/qgis', template => {
@@ -129,6 +134,13 @@ patchTemplate('/programs/qgis', template => {
   firstGroup = firstGroup.replace('class="catalog-group r19-atlas-group"', 'class="catalog-group r19-atlas-group r28-no-group-art"');
   next = next.slice(0, groupStart) + firstGroup + next.slice(groupEnd);
   next = replaceOne(next, '<p class="r08-catalog-summary"><strong>개발 완료 7개</strong><span aria-hidden="true">·</span><strong>개발 중 3개</strong></p>', '<p class="r08-catalog-summary"><strong>개발 완료 6개</strong><span aria-hidden="true">·</span><strong>개발 중 3개</strong></p><p class="r28-catalogue-note">' + escapeHtml(products.qgisNotice) + '</p>', 'QGIS status summary');
+  return next;
+});
+
+// Finder's last public release is verified independently from its stopped development status.
+patchTemplate('/projects/finder', template => {
+  let next = replaceOne(template, '<strong>공개 미정</strong>', '<strong>v2.1.2 공개 Release</strong>', 'Finder public status');
+  next = replaceOne(next, '<strong>공개 미정</strong>', '<strong>v2.1.2 공개 Release</strong>', 'Finder deployment status');
   return next;
 });
 
