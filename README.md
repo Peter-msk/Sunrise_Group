@@ -1,14 +1,22 @@
-# Sunrise Group — 공식 홈페이지 R28 후보
+# Sunrise Group — 공식 홈페이지 R29 A+B+D 디자인 보완
 
 운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
 - 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 현재 운영 기준: R27
-- 개발 후보: R28 (branch `r28-portal-detail-performance-20261121`)
+- 현재 운영 기준: R28
+- 개발 후보: R29 (branch `r29-three-theme-design-20261121`)
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
 
-## R28 변경 범위
+## R29 A+B+D 디자인 보완
+
+- A 시네마틱 현대미술형, B 하이엔드 기술기업형, D 공간정보 전문기업형을 메인 페이지에서도 3개 분야 진입구성으로 결합합니다.
+- 새 이미지/JS 없이 CSS로 궤도·기술 인터페이스·등고선 모티브를 구현하고 모바일 1열·태블릿 2열·PC 3열을 지원합니다.
+- PC 카탈로그 QGIS 총계의 오래된 10개 표기를 9개로 수정합니다.
+- R28 기능·이미지·3D 태양계 유지, targeted browser QA 및 시각 증빙을 추가합니다.
+- 설계·검증 계약: `docs/R29_DESIGN_AUDIT.md`.
+
+## R28 변경 범위 (기존 운영 기준)
 
 - PC 프로그램 16개와 QGIS 플러그인 9개의 카드 설명 및 상세 소개를 실제 확인된 기능 기준으로 정리한다.
 - 제품별 상세 페이지에 기능 설명과 3단계 작업 흐름을 추가한다.
@@ -30,7 +38,7 @@ npm run build
 node scripts/qa-portal.cjs
 ```
 
-- `scripts/assemble-r28.cjs`는 R27 검증 빌드를 호출한 뒤 R28의 제품 설명·레이아웃·이미지 최적화를 적용한다.
+- `scripts/assemble-r29.cjs`는 R28을 호출하고 R29 디자인만 추가합니다. 기존 `scripts/assemble-r28.cjs`는 R27 검증 빌드를 호출한 뒤 R28의 제품 설명·레이아웃·이미지 최적화를 적용한다.
 - `source/r28/products.json`은 제품 카드·상세 소개·기능·작업 흐름·검증 주의사항의 단일 콘텐츠 원장이다.
 - `public/assets/r28/`는 빌드 산출물이며 Git에 별도 저장하지 않는다. 파일명은 SHA-256 기반이다.
 - QA는 34개 라우트, PC 16개, QGIS 9개, 25개 상세 작업흐름, 이미지 자산 로딩·확대, PC/모바일 반응형 및 기존 내비게이션 계약을 확인한다.
@@ -40,4 +48,4 @@ node scripts/qa-portal.cjs
 
 Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R28 빌드·검증을 수행한 뒤 기존 Worker에 배포한다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
 
-R28은 후보 브랜치에서 빌드와 QA를 통과한 뒤 PR을 통해 main 반영 및 운영 배포한다. 현재 운영 main과 R27 배포 버전은 이 후보 작업 중 변경하지 않는다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않는다.
+R29은 별도 후보 브랜치에서 빌드와 집중 QA를 통과한 뒤 PR을 통해 main 반영 및 운영 배포합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.

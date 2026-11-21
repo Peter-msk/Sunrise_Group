@@ -11,25 +11,27 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - name: Native Node build
+      - name: R29 additive build and syntax gate
         run: |
           node --version
+          node --check scripts/assemble-r29.cjs
+          node --check scripts/qa-r29-design.cjs
           npm run build
       - name: Install isolated browser test dependency
         run: |
           npm install --prefix "$RUNNER_TEMP/sunrise-qa" --no-package-lock --no-audit --no-fund playwright@1.51.1
           "$RUNNER_TEMP/sunrise-qa/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Browser route and interaction QA
+      - name: Targeted A+B+D responsive and navigation QA
         env:
           NODE_PATH: ${{ runner.temp }}/sunrise-qa/node_modules
           SUNRISE_QA_ARTIFACT_DIR: ${{ runner.temp }}/sunrise-portal-screens
         run: |
-          node scripts/qa-portal.cjs
-      - name: Upload visual QA evidence
+          node scripts/qa-r29-design.cjs
+      - name: Upload R29 visual QA evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sunrise-group-r28-visual-qa
+          name: sunrise-group-r29-a-b-d-visual-qa
           path: ${{ runner.temp }}/sunrise-portal-screens/
           if-no-files-found: ignore
-          retention-days: 3
+          retention-days: 7
