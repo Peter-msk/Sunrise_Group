@@ -33,7 +33,8 @@ const planetObjectStart = html.indexOf('{', planetMapStart);
 const planetObjectEnd = html.indexOf('},R15_PLANET_IMAGES=', planetObjectStart);
 check(planetMapStart >= 0 && planetObjectEnd > planetObjectStart, 'solar texture manifest boundary missing');
 const planetAssetUrls = Object.values(JSON.parse(html.slice(planetObjectStart, planetObjectEnd + 1)));
-check(planetAssetUrls.length === 9 && planetAssetUrls.every(url => url.startsWith('/assets/r28/')), 'all nine solar textures must be externalized static assets');
+check(planetAssetUrls.length === 9, 'expected nine solar textures, got ' + planetAssetUrls.length);
+check(planetAssetUrls.every(url => url.startsWith('/assets/r28/')), 'solar texture asset URLs not externalized: ' + JSON.stringify(planetAssetUrls.map(url => String(url).slice(0, 100))));
 function patchTemplate(route, mutate) {
   const marker = '<template data-route="' + route + '">';
   const start = html.indexOf(marker);
