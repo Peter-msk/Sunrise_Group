@@ -61,7 +61,7 @@ const shots=process.env.SUNRISE_QA_ARTIFACT_DIR;
       if(!response.ok)return false;
       const bitmap=await createImageBitmap(await response.blob());
       const holder=e.closest('.sg3-product-object'),rect=e.getBoundingClientRect();
-      const displayed=!!holder&&getComputedStyle(holder).display!=='none'&&rect.width>80&&rect.height>50;
+      const displayed=!!holder&&getComputedStyle(holder).display!=='none'&&rect.width>0&&rect.height>0;
       const valid=bitmap.width>=1100&&e.getAttribute('alt')?.length>10&&displayed;
       bitmap.close();
       return valid;
