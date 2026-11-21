@@ -1,8 +1,9 @@
 const { chromium } = require('playwright');
 const fs = require('node:fs');
+const path = require('node:path');
 const http = require('node:http');
 const assert = require('node:assert/strict');
-// Accepted R27 display baseline: not a claim of current releases or native product testing.
+// R28: route, interaction, product-copy and static-image delivery contract.
 const productContract={
   "/programs/pc":[
     ["capture","Sunrise Capture","v4.2.2","정식 배포","배포 버전","v4.2.2"],
@@ -24,7 +25,6 @@ const productContract={
   ],
   "/programs/qgis":[
     ["qgis-tool","Sunrise QGIS Tool Plugin","0.7.4","개발 완료"],
-    ["photo-classifier","사진 분류 도우미","0.8.5 RC","개발 완료"],
     ["protection-analyzer","환경 보호·보전지구 통합분석","1.0.24","개발 완료"],
     ["survey-designer","환경영향평가 조사지점 자동설계","1.5.2","개발 완료"],
     ["survey-locator","조사지점 찾기","1.0.0","개발 중"],
@@ -37,12 +37,49 @@ const productContract={
 };
 (async () => {
   const html = fs.readFileSync('public/index.html');
-  const routes = [...html.toString('utf8').matchAll(/<template data-route="([^"]+)"/g)].map(m => m[1]);
-  assert.equal(routes.length, 35);
-  assert.equal(new Set(routes).size, 35);
+  const htmlText=html.toString('utf8');
+  const publicDir=path.resolve('public');
+  const assetDir=path.join(publicDir,'assets','r28');
+  const assets=fs.readdirSync(assetDir).filter(file=>/\.(?:png|jpg|webp|gif)$/i.test(file));
+  assert.equal(assets.length,24,'R28 content-addressed image asset count');
+  assert.ok(assets.every(file=>fs.statSync(path.join(assetDir,file)).size>0),'R28 image assets are non-empty');
+  assert.equal((htmlText.match(/data:image\/(?:png|jpeg|webp|gif);base64,/gi)||[]).length,0,'no inline base64 image payloads');
+  assert.equal(htmlText.includes('사진 분류 도우미'),false,'non-owned product name removed');
+  assert.equal(htmlText.includes('photo-classifier'),false,'non-owned route removed');
+  const imageTags=[...htmlText.matchAll(/<img\b[^>]*>/gi)].map(match=>match[0]);
+  assert.equal(imageTags.length,18,'R28 optimized image tag count');
+  for(const tag of imageTags){
+    assert.match(tag,/src="\/assets\/r28\//,'image uses static asset URL');
+    assert.match(tag,/loading="lazy"/,'image lazy loading');
+    assert.match(tag,/decoding="async"/,'image async decoding');
+    assert.match(tag,/width="\d+"/,'image intrinsic width');
+    assert.match(tag,/height="\d+"/,'image intrinsic height');
+    assert.match(tag,/class="[^"]*r28-optimized-image/,'R28 image marker');
+  }
+  const qgisTemplate=(htmlText.match(/<template data-route="\/programs\/qgis">([\s\S]*?)<\/template>/)||[])[1];
+  assert.ok(qgisTemplate,'QGIS catalogue route exists');
+  assert.equal((qgisTemplate.match(/<a class="catalog-line[^"]*" href="#\/projects\//g)||[]).length,9,'nine owned QGIS plugins');
+  assert.match(qgisTemplate,/개발 완료 6개/);
+  assert.match(qgisTemplate,/개발 중 3개/);
+  assert.equal((htmlText.match(/class="r28-workflow"/g)||[]).length,25,'all product details have workflow sections');
+  const routes = [...htmlText.matchAll(/<template data-route="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(routes.length,34);
+  assert.equal(new Set(routes).size,34);
   const server = http.createServer((req,res) => {
-    if (req.url !== '/') {res.writeHead(404);res.end();return;}
-    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(html);
+    const pathname=decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname);
+    if(pathname==='/'||pathname==='/index.html'){
+      res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
+      res.end(html);return;
+    }
+    if(pathname.startsWith('/assets/r28/')){
+      const target=path.resolve(publicDir,'.'+pathname);
+      const relative=path.relative(assetDir,target);
+      if(relative.startsWith('..')||path.isAbsolute(relative)||!fs.existsSync(target)){res.writeHead(404);res.end();return;}
+      const types={'.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.gif':'image/gif'};
+      res.writeHead(200,{'Content-Type':types[path.extname(target)]||'application/octet-stream','Cache-Control':'public, max-age=31536000, immutable'});
+      fs.createReadStream(target).pipe(res);return;
+    }
+    res.writeHead(404);res.end();
   });
   await new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
   const url = 'http://127.0.0.1:'+server.address().port+'/';
@@ -152,7 +189,7 @@ const productContract={
         await preview.click();
         const popup=await popupEvent;
         try{
-          await popup.waitForFunction(()=>location.protocol==='blob:'&&document.querySelector('img')?.naturalWidth>0);
+          await popup.waitForFunction(()=>location.pathname.startsWith('/assets/r28/')&&document.querySelector('img')?.naturalWidth>0);
           check(await popup.evaluate(()=>window.opener===null),width+' screenshot preview opener isolation');
         }finally{await popup.close();}
         await page.evaluate(()=>{location.hash='#/projects/eia-hub'});
@@ -298,6 +335,7 @@ const productContract={
               await row.click({timeout:7000});
               await page.waitForFunction(id=>location.hash==='#/projects/'+id&&document.querySelector('#page-outlet')?.dataset.route==='/projects/'+id,id,{timeout:7000});
               assert.equal(clean(await page.locator('#page-outlet h1').innerText()),name);
+              assert.equal(await page.locator('#page-outlet .r28-workflow').count(),1,'detailed workflow section');
               const facts=await page.locator('#page-outlet #specifications > div').evaluateAll(nodes=>nodes.map(e=>[e.querySelector('span')?.textContent?.trim(),e.querySelector('strong')?.textContent?.trim()]));
               assert.ok(facts.length>=2&&facts.every(([k,v])=>k&&v),'nonempty product facts');
               assert.equal(new Set(facts.map(f=>f[0])).size,facts.length,'unique fact labels');
@@ -307,7 +345,7 @@ const productContract={
                 assert.equal(values['확인한 개발 기준본'],version);
                 assert.equal(values['개발 상태'],status);
                 const statusBox=clean(await page.locator('#page-outlet .status-box').innerText());
-                assert.ok(statusBox.includes('공개 링크 미확인')&&statusBox.includes('이번 홈페이지 작업에서는 미검증'),'QGIS evidence limits');
+                assert.ok(statusBox.includes('공개 링크 미확인')&&statusBox.includes('NOT RUN'),'QGIS runtime evidence limits');
               }else{
                 assert.equal(values[field],expectedValue,'detail fact '+field);
                 if(id==='finder'||id==='aermod')assert.equal(values['공개 상태'],'공개 미정');
@@ -324,10 +362,10 @@ const productContract={
     }
   }finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
   console.log(JSON.stringify({visited,navigationAttempted,navigationPassed,productAttempted,productPassed,failures},null,2));
-  assert.equal(visited,95,'Expected viewport/route combinations');
+  assert.equal(visited,93,'Expected viewport/route combinations');
   assert.equal(navigationAttempted,25,'Expected navigation cases');
   assert.equal(navigationPassed,25,'Navigation QA failures');
-  assert.equal(productAttempted,80,'Expected product catalogue cases');
-  assert.equal(productPassed,80,'Product catalogue QA failures');
+  assert.equal(productAttempted,78,'Expected product catalogue cases');
+  assert.equal(productPassed,78,'Product catalogue QA failures');
   assert.equal(failures.length,0,'Browser QA failures');
 })().catch(e=>{console.error(e);process.exitCode=1});
