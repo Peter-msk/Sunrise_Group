@@ -120,7 +120,7 @@ const productContract={
     const solarFigure=perfPage.locator('#page-outlet figure[data-scene="/"]');
     assert.equal(await solarFigure.count(),1,'home solar scene exists');
     await solarFigure.scrollIntoViewIfNeeded();
-    await perfPage.waitForFunction(()=>document.querySelector('#page-outlet figure[data-scene="/"]')?.dataset.r15PlanetPreloadRequested==='true',{timeout:7000});
+    await perfPage.waitForFunction(()=>document.querySelector('#page-outlet figure[data-scene="/"]')?.dataset.r15PlanetPreloadRequested==='true',null,{timeout:7000});
     await perfPage.waitForFunction(urls=>urls.every(path=>performance.getEntriesByType('resource').some(entry=>new URL(entry.name).pathname===path)),planetUrls,{timeout:15000});
     assert.equal(planetResponses.size,planetUrls.length,'all solar textures fetched only after home scene becomes visible');
     assert.ok([...planetResponses.values()].every(status=>status===200),'all deferred solar textures return HTTP 200');
