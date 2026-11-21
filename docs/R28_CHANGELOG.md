@@ -8,6 +8,7 @@
 - 제품별 주요 기능, 입력·처리·산출 흐름을 구분.
 - Drawing Editor 상세에 DXF·DWG 입력을 반영하고, DWG 외부 변환기(ODA File Converter 또는 DWG 지원 LibreCAD) 의존성을 명시.
 - 개발 상태, 공개 배포 여부, 실제 QGIS Runtime 검증을 분리 표기.
+- Sunrise EIASS는 운영기관의 공식 소프트웨어가 아닌 Sunrise Group 자체 개발 도구임을 상세에 명시.
 - 제품 소유권이 확인되지 않은 QGIS 목록 항목과 상세 경로를 제거. 최종 카탈로그는 9개 플러그인으로 집계.
 
 ## 렌더링·정적 자산
