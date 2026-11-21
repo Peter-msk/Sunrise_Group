@@ -177,6 +177,7 @@ function dimensions(buffer, mime) {
   }
   return null;
 }
+const htmlBytesBeforeExternalization = Buffer.byteLength(html, 'utf8');
 const assetByUri = new Map();
 const assetByUrl = new Map();
 let dataUriOccurrences = 0;
@@ -244,4 +245,4 @@ fs.writeFileSync(output, html, 'utf8');
 console.log('R28 portal entry validated: ' + htmlBytes + ' bytes; SHA-256 ' + htmlSha);
 console.log('R28 routes: 34; PC programs: 16; QGIS plugins: 9; detail records: 25; non-owned listing removed.');
 console.log('R28 images: ' + dataUriOccurrences + ' inline references → ' + uniqueAssetCount + ' content-addressed assets; ' + imageTags + ' lazy/async image tags; assets ' + assetBytes + ' bytes.');
-console.log('R28 rendering: HTML reduced by ' + (100 * (1 - htmlBytes / 11099173)).toFixed(1) + '% against R27 measured baseline 11,099,173 bytes.');
+console.log('R28 rendering: HTML reduced by ' + (100 * (1 - htmlBytes / htmlBytesBeforeExternalization)).toFixed(1) + '% (' + htmlBytesBeforeExternalization + ' → ' + htmlBytes + ' bytes).');
