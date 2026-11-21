@@ -119,6 +119,17 @@ for (const [route, data] of Object.entries(products.products)) patchProductDetai
 const photoTemplate = /<template data-route="\/projects\/photo-classifier">[\s\S]*?<\/template>/g;
 check((html.match(photoTemplate) || []).length === 1, 'expected one non-owned detail template to remove');
 html = html.replace(photoTemplate, '');
+
+// The legacy page also owns route-keyed hero/scene metadata and a raw base64 preview.
+// Remove only the two exact route entries; preserve every other scene and image.
+let removedNonOwnedSceneEntries = 0;
+const routeProperty = /,\s*["']\/projects\/photo-classifier["']\s*:\s*\[[^\]]*\]/g;
+html = html.replace(/<script(?:\s[^>]*)?>[\s\S]*?<\/script>/gi, script => {
+  const matches = script.match(routeProperty) || [];
+  removedNonOwnedSceneEntries += matches.length;
+  return matches.length ? script.replace(routeProperty, '') : script;
+});
+check(removedNonOwnedSceneEntries === 2, 'expected two route-owned scene/preview data entries, removed ' + removedNonOwnedSceneEntries);
 check(!html.includes('photo-classifier') && !html.includes('사진 분류 도우미'), 'non-owned product content remains in final HTML');
 
 const css = fs.readFileSync(path.join(root, 'source', 'r28', 'polish.css'), 'utf8');
