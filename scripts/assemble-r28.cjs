@@ -35,8 +35,8 @@ function patchCard(template, route, description) {
   const match = template.match(pattern);
   check(!!match, 'catalogue card missing ' + route);
   const card = match[0];
-  check((card.match(/<p(?:\\s[^>]*)?>/g) || []).length === 1, 'catalogue description marker mismatch ' + route);
-  const updated = card.replace(/<p(?:\\s[^>]*)?>[\\s\\S]*?<\\/p>/, '<p>' + escapeHtml(description) + '</p>');
+  check((card.match(/<p(?:\s[^>]*)?>/g) || []).length === 1, 'catalogue description marker mismatch ' + route);
+  const updated = card.replace(/<p(?:\s[^>]*)?>[\s\S]*?<\/p>/, '<p>' + escapeHtml(description) + '</p>');
   return template.replace(card, updated);
 }
 function patchProductDetail(route, data) {
