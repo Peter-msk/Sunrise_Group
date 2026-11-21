@@ -1,12 +1,21 @@
-# Sunrise Group — 공식 홈페이지 R33 메인 UX·가독성 보완
+# Sunrise Group — 공식 홈페이지 R34 최종 소스 관리·배포
 
 운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
 - 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 현재 운영 기준: R32
-- 개발 후보: R33 (branch `r33-home-navigation-readability-20261122`)
+- 소스 기준 버전: R34 (배포 결과는 Cloudflare 빌드·실서비스 확인 기준)
+- 최종 후보 브랜치: `r34-final-source-first-release-20261122`
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
+
+## R34 최종 소스 중심 운영
+
+- **GitHub에는 HTML 배포 산출물 업로드 금지**: `public/index.html`은 `npm run build`가 **소스에서 생성**하며 `.gitignore`와 CI에서 Git 추적을 금지합니다. 웹 서버(Cloudflare)에는 이 생성 HTML만 업로드합니다.
+- 홈페이지 보완 원본은 `source/r34/home-polish.cjs`(편집 가능한 JavaScript 소스)와 `source/r34/polish.css`로 관리합니다. `scripts/assemble-r34.cjs`가 R33까지 기존 검증된 빌드에 최종 소스 계층을 적용합니다.
+- Git의 `source/r25/*.part`는 원형 보존된 이전 홈페이지 스냅샷(해시 검증되는 불변 빌드 입력)이고, 신규 개발은 JS/CSS 소스 파일만 수정합니다. 언어 분석에서 구형 스냅샷은 생성 원본으로 분리합니다.
+- GitHub Actions에서 **추적된 HTML 0건, 생성 파일·파생 이미지 0건**을 검사합니다. `npm run build`는 `public/index.html`을 생성하지만 Git에는 커밋되지 않습니다.
+- 최종 미세보완: 휴대전화의 캡션·상단 안내 가독성, 931~1180px 히어로 배치 균형, 키보드 제품 카드 포커스, 소셜 공유 설명 메타데이터. 기존 R33 기능·제품 수량·태양계는 유지합니다.
+- `node scripts/qa-r34-source.cjs`에서 소스 관리 계약을 검증하고, 실제 브라우저(390·1024·1440px)에서 영향 범위만 최종 확인합니다.
 
 ## R33 메인 탐색 동선·모바일 가독성 보완
 
@@ -70,7 +79,8 @@
 
 ```bash
 npm run build
-node scripts/qa-portal.cjs
+node scripts/qa-r34-source.cjs
+# 변경영향 브라우저 검사는 GitHub Actions에서 실행
 ```
 
 - `scripts/assemble-r31.cjs`는 R30까지 빌드한 뒤 상세 탐색만 보완합니다. R30→R29→R28→R27 순서로 기준본을 보존합니다. `scripts/assemble-r29.cjs`는 R28을 호출하고 R29 디자인만 추가합니다. 기존 `scripts/assemble-r28.cjs`는 R27 검증 빌드를 호출한 뒤 R28의 제품 설명·레이아웃·이미지 최적화를 적용한다.
@@ -81,6 +91,6 @@ node scripts/qa-portal.cjs
 
 ## 배포
 
-Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R28 빌드·검증을 수행한 뒤 기존 Worker에 배포한다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
+Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R34 최종 소스 빌드를 실행하여 생성된 `public/index.html`과 정적 이미지를 기존 Worker에 배포한다. GitHub에는 생성 HTML과 파생 이미지를 저장하지 않는다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
 
-R33는 분리된 후보 브랜치에서 CTA·앵커 스크롤과 글자·터치 영역을 집중 검증한 뒤 PR 병합 및 운영 배포합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
+R34 소스는 CI 성공 후 GitHub main 병합, Cloudflare Workers Static Assets 배포, 운영 URL 확인 순으로 확정합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.

@@ -11,27 +11,30 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - name: R33 homepage navigation and readability build gate
+      - name: R34 source-only release build and syntax gate
         run: |
           node --version
-          node --check scripts/assemble-r33.cjs
-          node --check scripts/qa-r33-home.cjs
+          node --check scripts/assemble-r34.cjs
+          node --check source/r34/home-polish.cjs
+          node --check scripts/qa-r34-source.cjs
+          node --check scripts/qa-r34-browser.cjs
           npm run build
+          node scripts/qa-r34-source.cjs
       - name: Install isolated browser test dependency
         run: |
           npm install --prefix "$RUNNER_TEMP/sunrise-qa" --no-package-lock --no-audit --no-fund playwright@1.51.1
           "$RUNNER_TEMP/sunrise-qa/node_modules/.bin/playwright" install --with-deps chromium
-      - name: R33 direct product and philosophy scroll plus mobile readability QA
+      - name: R34 final scoped browser and keyboard-focus QA
         env:
           NODE_PATH: ${{ runner.temp }}/sunrise-qa/node_modules
           SUNRISE_QA_ARTIFACT_DIR: ${{ runner.temp }}/sunrise-portal-screens
         run: |
-          node scripts/qa-r33-home.cjs
-      - name: Upload R33 homepage PC tablet mobile visual evidence
+          node scripts/qa-r34-browser.cjs
+      - name: Upload R34 PC tablet mobile final visual evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sunrise-group-r33-home-navigation-visual
+          name: sunrise-group-r34-source-first-final-visual
           path: ${{ runner.temp }}/sunrise-portal-screens/
           if-no-files-found: ignore
           retention-days: 7
