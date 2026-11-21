@@ -21,8 +21,8 @@ for(const m of list){
  assert.ok(page.includes('실제 실행 화면'),'true screenshot label '+m.route);
  assert.ok(page.includes('id="screens"'),'deep-linkable screenshot '+m.route);
  assert.ok(catalogue.includes('src="/assets/r35/'+m.file+'"'),'thumbnail in PC catalogue '+m.route);
- assert.ok(!page.includes('기능 설명용 모션 · 실제 실행 화면 아님'),'old false screenshot disclaimer removed '+m.route);
- if(m.type==='scene')assert.ok(!page.includes('data-scene="'+m.route+'"'),'old concept scene replaced '+m.route);
+ // Preserve separate, correctly labeled function-motion sections for existing real-image products.
+ if(m.type==='scene')assert.ok(!page.includes('data-scene="'+m.route+'"'),'old concept hero scene replaced '+m.route);
 }
 assert.equal((html.match(/<template data-route="/g)||[]).length,34,'all 34 routes');
 assert.equal((html.match(/class="r28-workflow" id="workflow"/g)||[]).length,25,'25 original workflow contents retained');
