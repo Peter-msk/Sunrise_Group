@@ -389,8 +389,10 @@ const productContract={
                 assert.equal(values['개발 상태'],status);
                 const statusBox=clean(await page.locator('#page-outlet .status-box').innerText());
                 assert.ok(statusBox.includes('공개 링크 미확인')&&statusBox.includes('NOT RUN'),'QGIS runtime evidence limits');
+                assert.equal(await page.locator('#page-outlet .r28-runtime-note').count(),1,'QGIS Runtime NOT RUN notice is visible');
               }else{
                 assert.equal(values[field],expectedValue,'detail fact '+field);
+                if(['finder','eiass','eia-manager','eia-hub','drawing-editor'].includes(id))assert.equal(await page.locator('#page-outlet .r28-product-note').count(),1,'product-specific status or dependency notice is visible');
                 if(id==='finder'){
                   assert.equal(values['공개 상태'],'v2.1.2 공개 Release');
                   assert.ok(clean(await page.locator('#page-outlet .status-box').innerText()).includes('v2.1.2 공개 Release'),'Finder last public release is visible');
