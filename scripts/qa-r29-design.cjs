@@ -40,6 +40,11 @@ const server=http.createServer((req,res)=>{
    assert.equal(await section.count(),1,'one brand bridge at '+width);
    assert.equal(await cards.count(),3,'three gateways at '+width);
    for(let i=0;i<3;i++)assert.equal(await cards.nth(i).getAttribute('href'),links[i][1],'gateway '+links[i][0]+' at '+width);
+   const luminance=await page.evaluate(()=>{
+    const nodes=[document.querySelector('#r29-triad-title'),document.querySelector('.r29-triad-intro'),document.querySelector('.r29-triad-eyebrow')];
+    return nodes.map(el=>{const rgb=(getComputedStyle(el).color.match(/\\d+/g)||[]).slice(0,3).map(Number);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]});
+   });
+   assert.ok(luminance.every(v=>v<155),'home headings and lead must contrast with light section at '+width+': '+JSON.stringify(luminance));
    const bounds=await page.evaluate(()=>{
     const s=document.querySelector('#page-outlet .r29-triad');
     const box=x=>{const r=x.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,height:r.height}};
@@ -49,7 +54,7 @@ const server=http.createServer((req,res)=>{
    assert.ok(bounds.scrollWidth<=bounds.clientWidth+2,'bridge horizontal overflow at '+width);
    assert.ok(bounds.cards.every(c=>c.width>160&&c.height>190&&c.left>=-1&&c.right<=width+1),'card fit at '+width+': '+JSON.stringify(bounds.cards));
    if(width===390||width===1440){
-     if(shots){const dir=path.join(shots,String(width));fs.mkdirSync(dir,{recursive:true});await section.scrollIntoViewIfNeeded();await page.screenshot({path:path.join(dir,'r29-home-a-b-d.png'),fullPage:true,animations:'disabled'});}
+     if(shots){const dir=path.join(shots,String(width));fs.mkdirSync(dir,{recursive:true});await section.scrollIntoViewIfNeeded();await page.evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:path.join(dir,'r29-home-a-b-d.png'),fullPage:true,animations:'disabled'});}
      for(let i=0;i<links.length;i++){
        await cards.nth(i).click();
        await page.waitForFunction(route=>document.querySelector('#page-outlet')?.dataset.route===route,links[i][1].slice(1));
