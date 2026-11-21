@@ -123,7 +123,7 @@ patchTemplate('/programs/qgis', template => {
   check(groupStart >= 0 && groupEndStart > groupStart, 'QGIS plugin-management group boundary missing');
   const groupEnd = groupEndStart + '</section>'.length;
   let firstGroup = next.slice(groupStart, groupEnd);
-  const nonOwnedGroupArt = firstGroup.match(/<figure class="r19-group-art">[\\s\\S]*?<\\/figure>/);
+  const nonOwnedGroupArt = firstGroup.match(/<figure class="r19-group-art">[\s\S]*?<\/figure>/);
   check(!!nonOwnedGroupArt, 'photo-review group illustration missing');
   firstGroup = firstGroup.replace(nonOwnedGroupArt[0], '');
   firstGroup = firstGroup.replace('class="catalog-group r19-atlas-group"', 'class="catalog-group r19-atlas-group r28-no-group-art"');
