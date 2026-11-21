@@ -13,7 +13,8 @@
 
 - 37개 인라인 이미지 참조를 24개 SHA-256 기반 정적 자산으로 외부화.
 - 중복 이미지 payload 제거.
-- 이미지 lazy loading, async decoding, intrinsic dimensions 적용.
+- 경로별 첫 이미지 12개는 eager/high-priority, 보조 이미지 6개는 lazy loading. async decoding과 intrinsic dimensions 적용.
+- 3D 태양계의 9개 행성 텍스처는 홈 장면이 viewport에 들어올 때만 로드하며, 다른 제품 페이지에서는 요청하지 않음.
 - 확대 이미지는 same-origin 정적 자산만 열도록 제한.
 - 해시 기반 이미지 자산에 1년 immutable cache 정책 적용.
 - 기존 R25 원본 조각 및 R27 overlay는 불변으로 유지.
