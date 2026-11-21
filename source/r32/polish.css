@@ -42,6 +42,8 @@
 .home-v2.r32-home .r32-solar-tools .r27-solar-buttons{gap:6px}
 .home-v2.r32-home .r32-solar-tools .r27-solar-buttons button{min-height:40px;min-width:0;font-size:12px;padding:8px 11px}
 .home-v2.r32-home .r32-hero-foot{max-width:1280px;margin:clamp(22px,3.5vw,45px) auto 0;padding:18px 0 0;border-top:1px solid #a2aaa446;display:flex;align-items:center;justify-content:space-between;gap:18px;color:#93a69f;font-size:12px;line-height:1.5}
+.home-v2.r32-home .r32-hero-foot .r19-cinema-links{display:flex;align-items:center;min-width:0;margin:0;gap:12px}
+.home-v2.r32-home .r32-hero-foot .r21-chapter-nav{display:none}
 .home-v2.r32-home .r32-hero-foot a{color:#eee8db;text-decoration:none;font-size:12px;font-weight:700}
 .home-v2.r32-home .r32-hero-foot a span{padding-left:10px;color:#e6ae80}
 /* Clear B/D product showcases: reusable real assets, not additional interface card counts. */
