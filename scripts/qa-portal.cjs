@@ -66,7 +66,7 @@ const productContract={
   assert.equal(pluginManagementGroup.includes('r19-group-art'),false,'non-owned field-photo group artwork removed');
   assert.match(qgisTemplate,/개발 완료 6개/);
   assert.match(qgisTemplate,/개발 중 3개/);
-  const drawingTemplate=(htmlText.match(/<template data-route="\\/projects\\/drawing-editor">([\\s\\S]*?)<\\/template>/)||[])[1];
+  const drawingTemplate=(htmlText.split('<template data-route="/projects/drawing-editor">')[1]||'').split('</template>')[0];
   assert.ok(drawingTemplate,'Drawing Editor detail route exists');
   assert.match(drawingTemplate,/DWG/,'Drawing Editor DWG input is documented');
   assert.match(drawingTemplate,/ODA File Converter/,'Drawing Editor external DWG dependency is disclosed');
