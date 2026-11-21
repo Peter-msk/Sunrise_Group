@@ -61,7 +61,7 @@ const productContract={
   const qgisTemplate=(htmlText.match(/<template data-route="\/programs\/qgis">([\s\S]*?)<\/template>/)||[])[1];
   assert.ok(qgisTemplate,'QGIS catalogue route exists');
   assert.equal((qgisTemplate.match(/<a class="catalog-line[^"]*" href="#\/projects\//g)||[]).length,9,'nine owned QGIS plugins');
-  const pluginManagementGroup=(qgisTemplate.match(/<section class="catalog-group r19-atlas-group r28-no-group-art"[^>]*>[\\s\\S]*?<\\/section>/)||[])[0];
+  const pluginManagementGroup=(qgisTemplate.match(/<section class="catalog-group r19-atlas-group r28-no-group-art"[^>]*>[\s\S]*?<\/section>/)||[])[0];
   assert.ok(pluginManagementGroup,'owned QGIS plugin-management group exists');
   assert.equal(pluginManagementGroup.includes('r19-group-art'),false,'non-owned field-photo group artwork removed');
   assert.match(qgisTemplate,/개발 완료 6개/);
