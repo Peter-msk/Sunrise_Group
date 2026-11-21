@@ -1,0 +1,46 @@
+'use strict';
+// R31: product-detail navigation contract. R25-R30 builders and product facts stay unchanged.
+require('./assemble-r30.cjs');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.join(__dirname,'..');
+const target=path.join(root,'public','index.html');
+let html=fs.readFileSync(target,'utf8');
+const assert=(ok,msg)=>{if(!ok)throw new Error('R31 product wayfinding: '+msg);};
+const routes=[...html.matchAll(/<template data-route="(\/projects\/[^"]+)">/g)].map(m=>m[1]);
+assert(routes.length===25,'25 owned product detail routes');
+let updated=0;
+for(const route of routes){
+  const marker='<template data-route="'+route+'">';
+  const start=html.indexOf(marker),end=html.indexOf('</template>',start);
+  assert(start>=0&&end>start,'detail route exists '+route);
+  let part=html.slice(start,end+'</template>'.length);
+  const navOpen='<nav aria-label="제품 안내 바로가기" class="r07-product-sections r19-product-jump">';
+  assert(part.split(navOpen).length===2,'one navigation '+route);
+  const navStart=part.indexOf(navOpen),navEnd=part.indexOf('</nav>',navStart);
+  assert(navEnd>navStart,'navigation closing tag '+route);
+  const nav=part.slice(navStart,navEnd+6);
+  assert(!nav.includes('r31-workflow-jump'),'no duplicate flow link '+route);
+  assert(part.split('<div class="r28-workflow" aria-label="작업 흐름">').length===2,'one workflow '+route);
+  assert(!part.includes('id="workflow"'),'workflow target must be newly owned '+route);
+  const withLink=nav.replace('</nav>','<a class="r31-workflow-jump" href="#'+route+'#workflow">작업 흐름</a></nav>');
+  part=part.replace(nav,withLink).replace('<div class="r28-workflow" aria-label="작업 흐름">','<div class="r28-workflow" id="workflow" tabindex="-1" aria-label="작업 흐름">');
+  html=html.slice(0,start)+part+html.slice(end+'</template>'.length);
+  updated++;
+}
+const css=fs.readFileSync(path.join(root,'source','r31','polish.css'),'utf8');
+assert(!/<\/style/i.test(css),'CSS must not close style tag');
+const hook='<style id="sunrise-r30-polish">';
+const s=html.indexOf(hook),e=s<0?-1:html.indexOf('</style>',s);
+assert(s>=0&&e>s,'R30 CSS anchor');
+html=html.slice(0,e+8)+'<style id="sunrise-r31-polish">'+css+'</style>'+html.slice(e+8);
+assert(updated===25,'all owned product details updated');
+assert((html.match(/class="r31-workflow-jump"/g)||[]).length===25,'25 navigation shortcuts');
+assert((html.match(/class="r28-workflow" id="workflow"/g)||[]).length===25,'25 focusable target locations');
+assert((html.match(/<template data-route="/g)||[]).length===34,'all routes retained');
+assert((html.match(/<a class="catalog-line[^"]*" href="#\/projects\//g)||[]).length===25,'25 product listings retained');
+assert((html.match(/data-design-pillar="[ABD]"/g)||[]).length===3,'A+B+D home intact');
+assert(html.includes('9개 플러그인 · 개발 완료 6개 · 개발 중 3개'),'QGIS owner count preserved');
+fs.writeFileSync(target,html,'utf8');
+console.log('R31: '+updated+' product detail routes with direct workflow navigation and focus targets; 34 routes, 25 listing rows and A+B+D intact.');
+console.log('R31 final HTML bytes '+Buffer.byteLength(html,'utf8'));
