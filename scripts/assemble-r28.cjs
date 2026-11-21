@@ -80,12 +80,12 @@ function patchProductDetail(route, data) {
       ).join('') + '</ol></div>';
     next = next.replace(featurePattern, features + workflow);
 
-    if (data.notice) {
-      next = next.replace('</div><p class="r08-screen-note"', '</div><div class="r28-product-note">' + escapeHtml(data.notice) + '</div><p class="r08-screen-note"');
-    }
-    if (data.runtimeNote) {
-      next = next.replace('이번 홈페이지 작업에서는 미검증', 'NOT RUN · 실기 검증 대기');
-      next = next.replace('</div><p class="r08-screen-note"', '</div><div class="r28-runtime-note">' + escapeHtml(data.runtimeNote) + '</div><p class="r08-screen-note"');
+    if (data.runtimeNote) next = next.replace('이번 홈페이지 작업에서는 미검증', 'NOT RUN · 실기 검증 대기');
+    const noteMarkup = (data.notice ? '<div class="r28-product-note">' + escapeHtml(data.notice) + '</div>' : '') +
+      (data.runtimeNote ? '<div class="r28-runtime-note">' + escapeHtml(data.runtimeNote) + '</div>' : '');
+    if (noteMarkup) {
+      check(next.split(detail).length === 2, 'product note insertion anchor mismatch ' + route);
+      next = next.replace(detail, detail + noteMarkup);
     }
     check(next.includes('class="r28-workflow"'), 'workflow insertion failed ' + route);
     return next;
@@ -139,8 +139,10 @@ patchTemplate('/programs/qgis', template => {
 
 // Finder's last public release is verified independently from its stopped development status.
 patchTemplate('/projects/finder', template => {
-  let next = replaceOne(template, '<strong>공개 미정</strong>', '<strong>v2.1.2 공개 Release</strong>', 'Finder public status');
-  next = replaceOne(next, '<strong>공개 미정</strong>', '<strong>v2.1.2 공개 Release</strong>', 'Finder deployment status');
+  const unknownPublicMarkers = (template.match(/<strong>공개 미정<\/strong>/g) || []).length;
+  check(unknownPublicMarkers === 2, 'expected two Finder public-status markers, got ' + unknownPublicMarkers);
+  const next = template.replace(/<strong>공개 미정<\/strong>/g, '<strong>v2.1.2 공개 Release</strong>');
+  check((next.match(/<strong>v2.1.2 공개 Release<\/strong>/g) || []).length === 2, 'Finder public release status replacement failed');
   return next;
 });
 
