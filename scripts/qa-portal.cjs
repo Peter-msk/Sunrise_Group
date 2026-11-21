@@ -377,6 +377,14 @@ const productContract={
               assert.equal(clean(await row.locator('h3').innerText()),name);
               assert.equal(clean(await row.locator('.catalog-line-meta b').innerText()),version);
               assert.ok(clean(await row.locator('.catalog-line-meta').innerText()).includes(status),'catalogue status');
+                if(id==='qgis-tool'){
+                  const groupLayout=await page.locator('#page-outlet .r28-no-group-art').evaluate(el=>{
+                    const group=el.getBoundingClientRect(),list=el.querySelector('.catalog-lines').getBoundingClientRect();
+                    return {columns:getComputedStyle(el).gridTemplateColumns.split(' ').length,groupWidth:group.width,listWidth:list.width};
+                  });
+                  assert.equal(groupLayout.columns,1,'QGIS plugin-management group uses one column');
+                  assert.ok(groupLayout.listWidth>=groupLayout.groupWidth*0.8,'QGIS plugin list uses full available width');
+                }
               await row.click({timeout:7000});
               await page.waitForFunction(id=>location.hash==='#/projects/'+id&&document.querySelector('#page-outlet')?.dataset.route==='/projects/'+id,id,{timeout:7000});
               assert.equal(clean(await page.locator('#page-outlet h1').innerText()),name);
@@ -392,14 +400,6 @@ const productContract={
                 const statusBox=clean(await page.locator('#page-outlet .status-box').innerText());
                 assert.ok(statusBox.includes('공개 링크 미확인')&&statusBox.includes('NOT RUN'),'QGIS runtime evidence limits');
                 assert.equal(await page.locator('#page-outlet .r28-runtime-note').count(),1,'QGIS Runtime NOT RUN notice is visible');
-                if(id==='qgis-tool'){
-                  const groupLayout=await page.locator('#page-outlet .r28-no-group-art').evaluate(el=>{
-                    const group=el.getBoundingClientRect(),list=el.querySelector('.catalog-lines').getBoundingClientRect();
-                    return {columns:getComputedStyle(el).gridTemplateColumns.split(' ').length,groupWidth:group.width,listWidth:list.width};
-                  });
-                  assert.equal(groupLayout.columns,1,'QGIS plugin-management group uses one column');
-                  assert.ok(groupLayout.listWidth>=groupLayout.groupWidth*0.8,'QGIS plugin list uses full available width');
-                }
               }else{
                 assert.equal(values[field],expectedValue,'detail fact '+field);
                 if(['finder','eiass','eia-manager','eia-hub','drawing-editor'].includes(id))assert.equal(await page.locator('#page-outlet .r28-product-note').count(),1,'product-specific status or dependency notice is visible');
