@@ -118,6 +118,16 @@ patchTemplate('/programs/qgis', template => {
   next = replaceOne(next, 'QGIS 플러그인 <span>10</span>', 'QGIS 플러그인 <span>9</span>', 'QGIS count tab');
   next = replaceOne(next, '플러그인·현장자료 관리 <span>2개 ↓</span>', '플러그인 관리 <span>1개 ↓</span>', 'QGIS category navigation');
   next = replaceOne(next, '<h3>플러그인·현장자료 관리</h3><p>통합 카탈로그와 현장사진 검수 · 2개</p>', '<h3>플러그인 관리</h3><p>플러그인·스크립트 통합 관리 · 1개</p>', 'QGIS category heading');
+  const groupStart = next.indexOf('<section class="catalog-group r19-atlas-group" data-group-order="1" id="manage">');
+  const groupEndStart = next.indexOf('</section>', groupStart);
+  check(groupStart >= 0 && groupEndStart > groupStart, 'QGIS plugin-management group boundary missing');
+  const groupEnd = groupEndStart + '</section>'.length;
+  let firstGroup = next.slice(groupStart, groupEnd);
+  const nonOwnedGroupArt = firstGroup.match(/<figure class="r19-group-art">[\\s\\S]*?<\\/figure>/);
+  check(!!nonOwnedGroupArt, 'photo-review group illustration missing');
+  firstGroup = firstGroup.replace(nonOwnedGroupArt[0], '');
+  firstGroup = firstGroup.replace('class="catalog-group r19-atlas-group"', 'class="catalog-group r19-atlas-group r28-no-group-art"');
+  next = next.slice(0, groupStart) + firstGroup + next.slice(groupEnd);
   next = replaceOne(next, '<p class="r08-catalog-summary"><strong>개발 완료 7개</strong><span aria-hidden="true">·</span><strong>개발 중 3개</strong></p>', '<p class="r08-catalog-summary"><strong>개발 완료 6개</strong><span aria-hidden="true">·</span><strong>개발 중 3개</strong></p><p class="r28-catalogue-note">' + escapeHtml(products.qgisNotice) + '</p>', 'QGIS status summary');
   return next;
 });
@@ -220,7 +230,7 @@ html = html.replace(dataUriPattern, (full, mime, base64) => {
   return url;
 });
 const uniqueAssetCount = assetByUri.size;
-check(dataUriOccurrences === 37 && uniqueAssetCount === 24, 'embedded image inventory changed; observed ' + dataUriOccurrences + ' references / ' + uniqueAssetCount + ' unique assets');
+check(dataUriOccurrences === 36 && uniqueAssetCount === 23, 'embedded image inventory changed; observed ' + dataUriOccurrences + ' references / ' + uniqueAssetCount + ' unique assets');
 
 let imageTags = 0;
 let eagerImages = 0;
@@ -250,7 +260,7 @@ html = html.replace(/<template data-route="([^"]+)">([\s\S]*?)<\/template>/g, (t
   });
   return template.replace(content, updatedContent);
 });
-check(imageTags === 18, 'expected 18 optimized image tags, got ' + imageTags);
+check(imageTags === 17, 'expected 18 optimized image tags, got ' + imageTags);
 check(eagerImages === 12, 'expected 12 route-leading eager images, got ' + eagerImages);
 check(!/data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]{128,}/i.test(html), 'inline base64 image payload remains');
 check((html.match(/<template data-route="/g) || []).length === 34, 'expected 34 final route templates');
