@@ -18,6 +18,10 @@ assert.ok(html.includes('9개 플러그인 · 개발 완료 6개 · 개발 중 3
 assert.ok(home.includes('class="r32-home"')||home.includes('r32-home"'),'new home is present');
 assert.ok(home.includes('id="solutions"'),'main product anchor');
 assert.ok(home.includes('id="purpose"'),'original deep link preserved');
+assert.ok(home.includes('class="r19-cinema-links"'),'existing homepage chapter-nav mount remains');
+assert.ok(home.includes('class="r32-ethos r19-values-section"'),'existing values chapter hook preserved');
+assert.ok(home.includes('class="r32-future r19-end"'),'existing future chapter hook preserved');
+
 assert.ok(home.includes('class="r32-solar-tools"'),'collapsible original solar controls');
 assert.ok(home.includes('id="r27-solar-help"'),'solar accessibility guide');
 assert.equal((home.match(/<h1\b/g)||[]).length,1,'one accessible h1');
