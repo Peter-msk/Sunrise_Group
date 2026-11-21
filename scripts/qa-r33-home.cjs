@@ -89,7 +89,7 @@ const dir=process.env.SUNRISE_QA_ARTIFACT_DIR;
      const b=el.getBoundingClientRect();return b.top<innerHeight&&b.bottom>0;
     },targetId);
     const locationTop=await page.locator('#page-outlet #'+targetId).evaluate(el=>el.getBoundingClientRect().top);
-    assert.ok(locationTop>=44&&locationTop<innerHeight,'deep anchor visible below header '+href+' '+width+' top '+locationTop);
+    assert.ok(locationTop>=44&&locationTop<page.viewportSize().height,'deep anchor visible below header '+href+' '+width+' top '+locationTop);
     assert.equal(await page.locator('#page-outlet main.r32-home').count(),1,'deep link remains on homepage '+width);
    };
    await clickAndCheck('#/#solutions','solutions');heroClicks++;
