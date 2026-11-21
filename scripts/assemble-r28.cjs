@@ -18,6 +18,16 @@ const replaceOne = (source, from, to, label) => {
   check(source.split(from).length === 2, 'expected one ' + (label || 'marker') + ': ' + from.slice(0, 100));
   return source.replace(from, () => to);
 };
+
+/* R15 solar textures are only consumed by the home solar scene.
+   Defer their requests until that scene intersects the viewport. */
+const solarPreloadBefore = "const ro=new ResizeObserver(()=>requestPaint());ro.observe(stage);const io=new IntersectionObserver(es=>{visible=es[0].isIntersecting;if(visible){requestPaint();schedule();}else if(!interaction)stop();});io.observe(figure);sync();resize();paint();schedule();r15PreloadPlanets().then(results=>{if(!disposed){figure.dataset.planetTexturesReady=String(results.every(Boolean));sprites.clear();requestPaint();}});";
+const solarPreloadAfter = "const ro=new ResizeObserver(()=>requestPaint());ro.observe(stage);const preloadPlanetTextures=()=>{if(route!=='/'||figure.dataset.r15PlanetPreloadRequested==='true')return;figure.dataset.r15PlanetPreloadRequested='true';r15PreloadPlanets().then(results=>{if(!disposed){figure.dataset.planetTexturesReady=String(results.every(Boolean));sprites.clear();requestPaint();}});};const io=new IntersectionObserver(es=>{visible=es[0].isIntersecting;if(visible){preloadPlanetTextures();requestPaint();schedule();}else if(!interaction)stop();});io.observe(figure);sync();resize();paint();schedule();";
+html = replaceOne(html, solarPreloadBefore, solarPreloadAfter, 'defer home-only solar textures');
+const r28MainScripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].filter(match => match[1].includes('function sg3Render(figure)'));
+check(r28MainScripts.length === 1, 'expected one R28 main rendering script');
+new vm.Script(r28MainScripts[0][1], { filename: 'sunrise-r28-inline.js' });
+check(html.includes("figure.dataset.r15PlanetPreloadRequested==='true'"), 'solar texture lazy-load guard missing');
 function patchTemplate(route, mutate) {
   const marker = '<template data-route="' + route + '">';
   const start = html.indexOf(marker);
@@ -265,5 +275,5 @@ const htmlSha = crypto.createHash('sha256').update(html).digest('hex');
 fs.writeFileSync(output, html, 'utf8');
 console.log('R28 portal entry validated: ' + htmlBytes + ' bytes; SHA-256 ' + htmlSha);
 console.log('R28 routes: 34; PC programs: 16; QGIS plugins: 9; detail records: 25; non-owned listing removed.');
-console.log('R28 images: ' + dataUriOccurrences + ' inline references → ' + uniqueAssetCount + ' content-addressed assets; ' + imageTags + ' lazy/async image tags; assets ' + assetBytes + ' bytes.');
+console.log('R28 images: ' + dataUriOccurrences + ' inline references → ' + uniqueAssetCount + ' content-addressed assets; ' + imageTags + ' optimized tags (' + eagerImages + ' eager route-leading, ' + (imageTags - eagerImages) + ' lazy); assets ' + assetBytes + ' bytes.');
 console.log('R28 rendering: HTML reduced by ' + (100 * (1 - htmlBytes / htmlBytesBeforeExternalization)).toFixed(1) + '% (' + htmlBytesBeforeExternalization + ' → ' + htmlBytes + ' bytes).');
