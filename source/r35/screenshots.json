@@ -1,0 +1,92 @@
+{
+  "screenshots": [
+    {
+      "id": "cleaner",
+      "route": "/projects/cleaner",
+      "name": "Sunrise Cleaner",
+      "version": "v3.7.7",
+      "file": "sunrise-cleaner-actual.webp",
+      "width": 1280,
+      "height": 747,
+      "sha256": "4c7ad1f743b798f709e2d2b6d68f88d0f8b948cf2a6f634334dce8b17c9dea80",
+      "old": "/assets/r28/aea9454c3a6475d0aa902604.png",
+      "type": "replace",
+      "alt": "Sunrise Cleaner v3.7.7 실제 실행 화면"
+    },
+    {
+      "id": "eiass",
+      "route": "/projects/eiass",
+      "name": "Sunrise EIASS",
+      "version": "v4.7.0",
+      "file": "sunrise-eiass-actual.webp",
+      "width": 1280,
+      "height": 792,
+      "sha256": "2166cfbc7de61dc4cee18ec8efc0089d419c9482cc421847cf31a67274001cfe",
+      "old": "/assets/r28/290799caef22817d876c9b8c.png",
+      "type": "replace",
+      "alt": "Sunrise EIASS v4.7.0 실제 실행 화면"
+    },
+    {
+      "id": "pdf-editor",
+      "route": "/projects/pdf-editor",
+      "name": "Sunrise PDF Editor",
+      "version": "v4.6.3",
+      "file": "sunrise-pdf-editor-actual.webp",
+      "width": 1280,
+      "height": 824,
+      "sha256": "113ea3023a13db7b150003e6b74076658be1b87a94386a09d2ab4f42bc8a49a2",
+      "old": "/assets/r28/689a524eb354da5723c351a7.png",
+      "type": "replace",
+      "alt": "Sunrise PDF Editor v4.6.3 실제 실행 화면"
+    },
+    {
+      "id": "finder",
+      "route": "/projects/finder",
+      "name": "Sunrise Finder",
+      "version": "v2.1.2",
+      "file": "sunrise-finder-actual.webp",
+      "width": 1280,
+      "height": 806,
+      "sha256": "44d6ea06cc82274475824859d591fa608484e85dc536be1b9555790555cd57a0",
+      "type": "scene",
+      "alt": "Sunrise Finder v2.1.2 주소·좌표 변환 실제 실행 화면"
+    },
+    {
+      "id": "image",
+      "route": "/projects/image",
+      "name": "Sunrise Image",
+      "version": "표시 없음",
+      "file": "sunrise-image-actual.webp",
+      "width": 1152,
+      "height": 766,
+      "sha256": "c7d3f383776dbc20e22a211272c0529a3d5bbbdd4decdc6169090cbdf7554282",
+      "type": "scene",
+      "alt": "Sunrise Image 문서 이미지 추출 및 변환 실제 실행 화면"
+    },
+    {
+      "id": "eia-hub",
+      "route": "/projects/eia-hub",
+      "name": "Sunrise EIA Data Hub",
+      "version": "웹 개발본",
+      "file": "sunrise-eia-hub-actual.webp",
+      "width": 1280,
+      "height": 734,
+      "sha256": "0d08d1b6a98b227c16c4efb2d66ce2f9c647e6cb4f1c805b0d224b08372a8302",
+      "type": "scene",
+      "alt": "Sunrise EIA Data Hub 웹 개발본 실제 화면"
+    },
+    {
+      "id": "drawing-editor",
+      "route": "/projects/drawing-editor",
+      "name": "Sunrise Drawing Editor",
+      "version": "v1.1.0",
+      "file": "sunrise-drawing-editor-actual.webp",
+      "width": 1280,
+      "height": 773,
+      "sha256": "792c4ed165bfefe1e87e66680ae2c66545e545f4a37a390d2e6189a72039b7ee",
+      "type": "scene",
+      "alt": "Sunrise Drawing Editor v1.1.0 도면 레이어 및 미리보기 실제 실행 화면"
+    }
+  ],
+  "provenance": "User-supplied real application screenshot 2026-11-21; crop + WebP optimization, local destination path blurred for public release; no generative image"
+}

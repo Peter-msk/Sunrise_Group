@@ -1,0 +1,13 @@
+/* R35 actual application images; all real captures supplied by user. */
+.sg3-product .r35-real-screenshot{min-width:0}
+.sg3-product .r35-real-screenshot figure{margin:0;max-width:100%}
+.sg3-product .r35-real-screenshot .screen-full-link{display:block;max-width:100%;overflow:hidden}
+.sg3-product .r35-real-screenshot img{display:block;width:100%;height:auto;object-fit:contain;background:#eef3f6}
+.sg3-product .r35-real-screenshot figcaption{font-size:12px;line-height:1.7;color:#63776e;overflow-wrap:anywhere}
+.sg3-product .r35-real-screenshot a:focus-visible{outline:3px solid #b8754c;outline-offset:3px}
+.r20-catalog .r35-photo-thumb{display:block;overflow:hidden;min-width:0;aspect-ratio:480/290;background:#ecf0ef;border:1px solid #b9c9d0;border-radius:3px}
+.r20-catalog .r35-photo-thumb img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+.r20-catalog .r35-photo-product{min-width:0}
+.r20-catalog a.catalog-line:focus-visible .r35-photo-thumb{outline:2px solid #a56945;outline-offset:2px}
+@media(max-width:760px){.r20-catalog .r35-photo-thumb{max-width:100%}.sg3-product .r35-real-screenshot figcaption{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.r20-catalog .r35-photo-thumb img{transition:none}}
