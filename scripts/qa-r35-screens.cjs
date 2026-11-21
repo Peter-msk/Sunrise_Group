@@ -66,6 +66,14 @@ const shots=process.env.SUNRISE_QA_ARTIFACT_DIR;
       bitmap.close();
       return valid;
     }),'catalogue real image bytes and accessible label '+width);
+    // Simulate a real user reaching each card so lazy-loaded source assets
+    // are decoded before the full-page visual evidence screenshot.
+    await img.scrollIntoViewIfNeeded();
+    assert.ok(await img.evaluate(async e=>{
+      e.loading='eager';
+      await e.decode().catch(()=>{});
+      return e.complete&&e.naturalWidth>=1100;
+    }),'scrolled user-visible catalogue screenshot decoded '+width);
    }
    if(shots){
     const dir=path.join(shots,String(width));fs.mkdirSync(dir,{recursive:true});
