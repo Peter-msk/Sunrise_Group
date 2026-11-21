@@ -63,6 +63,8 @@ const productContract={
   assert.equal((qgisTemplate.match(/<a class="catalog-line[^"]*" href="#\/projects\//g)||[]).length,9,'nine owned QGIS plugins');
   const pluginManagementGroup=(qgisTemplate.match(/<section class="catalog-group r19-atlas-group r28-no-group-art"[^>]*>[\s\S]*?<\/section>/)||[])[0];
   assert.ok(pluginManagementGroup,'owned QGIS plugin-management group exists');
+  const r28Css=fs.readFileSync(path.join(__dirname,'..','source','r28','polish.css'),'utf8');
+  assert.match(r28Css,/r19-atlas-group\.r28-no-group-art\{grid-template-columns:minmax\(0,1fr\)/,'QGIS plugin-management group must use full-width single-column layout');
   assert.equal(pluginManagementGroup.includes('r19-group-art'),false,'non-owned field-photo group artwork removed');
   assert.match(qgisTemplate,/개발 완료 6개/);
   assert.match(qgisTemplate,/개발 중 3개/);
