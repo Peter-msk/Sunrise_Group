@@ -66,6 +66,9 @@ const productContract={
   assert.equal(pluginManagementGroup.includes('r19-group-art'),false,'non-owned field-photo group artwork removed');
   assert.match(qgisTemplate,/개발 완료 6개/);
   assert.match(qgisTemplate,/개발 중 3개/);
+  const eiassTemplate=(htmlText.split('<template data-route="/projects/eiass">')[1]||'').split('</template>')[0];
+  assert.ok(eiassTemplate,'Sunrise EIASS detail route exists');
+  assert.match(eiassTemplate,/EIASS 운영기관의 공식 소프트웨어가 아닌/,'Sunrise EIASS independent-product disclaimer');
   const drawingTemplate=(htmlText.split('<template data-route="/projects/drawing-editor">')[1]||'').split('</template>')[0];
   assert.ok(drawingTemplate,'Drawing Editor detail route exists');
   assert.match(drawingTemplate,/DWG/,'Drawing Editor DWG input is documented');
