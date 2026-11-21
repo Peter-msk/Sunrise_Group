@@ -79,7 +79,8 @@
 
 ```bash
 npm run build
-node scripts/qa-portal.cjs
+node scripts/qa-r34-source.cjs
+# 변경영향 브라우저 검사는 GitHub Actions에서 실행
 ```
 
 - `scripts/assemble-r31.cjs`는 R30까지 빌드한 뒤 상세 탐색만 보완합니다. R30→R29→R28→R27 순서로 기준본을 보존합니다. `scripts/assemble-r29.cjs`는 R28을 호출하고 R29 디자인만 추가합니다. 기존 `scripts/assemble-r28.cjs`는 R27 검증 빌드를 호출한 뒤 R28의 제품 설명·레이아웃·이미지 최적화를 적용한다.
@@ -90,6 +91,6 @@ node scripts/qa-portal.cjs
 
 ## 배포
 
-Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R28 빌드·검증을 수행한 뒤 기존 Worker에 배포한다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
+Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R34 최종 소스 빌드를 실행하여 생성된 `public/index.html`과 정적 이미지를 기존 Worker에 배포한다. GitHub에는 생성 HTML과 파생 이미지를 저장하지 않는다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
 
 R34 소스는 CI 성공 후 GitHub main 병합, Cloudflare Workers Static Assets 배포, 운영 URL 확인 순으로 확정합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
