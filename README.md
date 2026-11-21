@@ -16,6 +16,7 @@
 - Sunrise Finder의 마지막 공개 버전 v2.1.2와 개발 중지 상태를 분리하고, Sunrise EIASS가 운영기관의 공식 소프트웨어가 아님을 명시한다.
 - 개발 상태, 공개 배포 여부, 실제 QGIS Runtime 검증을 분리해 표시한다.
 - 외부 개발 제품 목록과 상세 경로를 제거하고 QGIS 카탈로그 집계·그룹 수를 9개 기준으로 갱신한다.
+- QGIS 플러그인 관리 그룹의 불필요한 빈 2열 공간을 전체 폭 1열로 재배치한다.
 - 36개 이미지 참조를 23개 content-addressed 정적 파일로 외부화하고 중복 payload를 제거한다.
 - 각 경로의 첫 이미지 12개는 `loading=eager` + `fetchpriority=high`, 나머지 5개는 `loading=lazy`로 처리한다. 모든 이미지에 `decoding=async`와 intrinsic width/height를 지정한다.
 - 3D 태양계의 9개 행성 텍스처는 홈 태양계 장면이 실제 viewport에 들어올 때만 요청한다. 다른 제품 페이지에서는 불필요한 텍스처 다운로드를 하지 않는다.
