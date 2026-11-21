@@ -93,9 +93,12 @@ const productContract={
   const check=(condition,label)=>{if(!condition)failures.push(label);};
   try {
     browser=await chromium.launch({headless:true});
-    const planetMapMatch=htmlText.match(/const R15_PLANET_DATA=(\{[\s\S]*?\}),R15_PLANET_IMAGES=/);
-    assert.ok(planetMapMatch,'R15 solar texture manifest exists');
-    const planetUrls=Object.values(JSON.parse(planetMapMatch[1]));
+    const planetMapStart=htmlText.indexOf('const R15_PLANET_DATA=');
+    assert.ok(planetMapStart>=0,'R15 solar texture manifest exists');
+    const planetObjectStart=htmlText.indexOf('{',planetMapStart);
+    const planetObjectEnd=htmlText.indexOf('},R15_PLANET_IMAGES=',planetObjectStart);
+    assert.ok(planetObjectStart>=0&&planetObjectEnd>planetObjectStart,'R15 solar texture object boundary exists');
+    const planetUrls=Object.values(JSON.parse(htmlText.slice(planetObjectStart,planetObjectEnd+1)));
     assert.equal(planetUrls.length,9,'nine solar texture assets');
     const perfContext=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'});
     const perfPage=await perfContext.newPage();
