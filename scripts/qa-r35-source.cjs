@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..');
 const git=(args)=>cp.execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();
 const tracked=git(['ls-files','-z']).split('\0').filter(Boolean).map(x=>x.replace(/\\/g,'/'));
 assert.equal(tracked.filter(p=>/\.html?$/i.test(p)).length,0,'generated HTML may not be tracked');
-assert.equal(tracked.filter(p=>p.startsWith('public/')).length,0,'generated public output may not be tracked');
+assert.equal(tracked.filter(p=>p.startsWith('public/')&&p!=='public/_headers').length,0,'generated public output must be ignored; source-owned deployment policy _headers is allowed');
 assert.equal(git(['check-ignore','--no-index','public/index.html']),'public/index.html','public HTML ignored');
 const list=JSON.parse(fs.readFileSync(path.join(root,'source','r35','screenshots.json'),'utf8')).screenshots;
 assert.equal(list.length,7,'seven user captures');
