@@ -11,27 +11,27 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - name: R30 additive build and syntax gate
+      - name: R31 additive build and syntax gate
         run: |
           node --version
-          node --check scripts/assemble-r30.cjs
-          node --check scripts/qa-r30-design.cjs
+          node --check scripts/assemble-r31.cjs
+          node --check scripts/qa-r31-details.cjs
           npm run build
       - name: Install isolated browser test dependency
         run: |
           npm install --prefix "$RUNNER_TEMP/sunrise-qa" --no-package-lock --no-audit --no-fund playwright@1.51.1
           "$RUNNER_TEMP/sunrise-qa/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Targeted R30 factual, design and responsive browser QA
+      - name: R31 25-product desktop and mobile workflow navigation QA
         env:
           NODE_PATH: ${{ runner.temp }}/sunrise-qa/node_modules
           SUNRISE_QA_ARTIFACT_DIR: ${{ runner.temp }}/sunrise-portal-screens
         run: |
-          node scripts/qa-r30-design.cjs
-      - name: Upload R30 PC and mobile visual QA evidence
+          node scripts/qa-r31-details.cjs
+      - name: Upload R31 detail-page visual evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sunrise-group-r30-visual-qa
+          name: sunrise-group-r31-product-detail-qa
           path: ${{ runner.temp }}/sunrise-portal-screens/
           if-no-files-found: ignore
           retention-days: 7
