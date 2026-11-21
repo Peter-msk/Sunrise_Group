@@ -100,20 +100,21 @@
       ]
     },
     "/projects/drawing-editor": {
-      "cardDescription": "OnMap PDF와 DXF 도면의 레이어를 확인·표시하고, 필요한 도면 이미지를 미리보기한 뒤 PNG/JPG로 추출합니다.",
-      "lead": "OnMap PDF와 DXF 도면의 레이어를 확인하고 필요한 도면 영역을 이미지로 추출하는 Windows 도구입니다.",
-      "summary": "PDF 레이어를 검색하고 표시·숨김을 전환하며 도면을 미리봅니다. 필요한 레이어와 영역을 선택해 고해상도 이미지로 추출하고, 투명 배경·흰 여백 제거와 일괄 처리 등 지원 옵션을 이용합니다.",
+      "cardDescription": "OnMap PDF·DXF·DWG 도면의 레이어를 확인·표시하고, 필요한 도면 이미지를 미리보기한 뒤 PNG/JPG로 추출합니다.",
+      "lead": "OnMap PDF·DXF·DWG 도면의 레이어를 확인하고 필요한 도면 영역을 이미지로 추출하는 Windows 도구입니다.",
+      "summary": "PDF 레이어를 검색하고 표시·숨김을 전환하며 도면을 미리봅니다. DXF·DWG 도면을 열어 필요한 레이어와 영역을 선택하고 고해상도 이미지로 추출합니다. DWG 입력에는 ODA File Converter 또는 DWG 지원 LibreCAD가 별도로 필요합니다.",
       "features": [
-        "PDF 레이어 검색·표시·숨김 및 규칙 저장",
-        "DXF 도면 미리보기와 필요한 영역 선택",
-        "PNG/JPG 이미지 추출 및 배경·여백 옵션",
-        "지원 입력의 일괄 처리와 작업 결과 확인"
+        "OnMap PDF 레이어 검색·표시·숨김 및 규칙 저장",
+        "DXF·DWG 도면 미리보기와 필요한 영역 선택",
+        "PNG/JPG 이미지 추출 및 투명 배경·흰 여백 제거",
+        "다중 도면 일괄 처리와 작업 결과 확인"
       ],
       "workflow": [
-        "OnMap PDF 또는 DXF 도면을 열고 레이어를 확인합니다.",
+        "OnMap PDF·DXF·DWG 도면을 열고 레이어를 확인합니다. DWG는 지원 변환 도구 설치 여부도 확인합니다.",
         "표시할 레이어와 추출할 영역·해상도 옵션을 선택합니다.",
         "미리보기 결과를 확인한 뒤 PNG/JPG로 저장합니다."
-      ]
+      ],
+      "notice": "DWG 입력에는 ODA File Converter 또는 DWG 지원 LibreCAD의 별도 설치가 필요합니다. GitHub v1.1.0 공개 Release 자산은 등록되어 있으나 README에는 실행파일 배포 준비 중이라는 문구가 남아 있어, 공개 자산과 독립 Windows 실행 검증은 구분합니다."
     },
     "/projects/eiass": {
       "cardDescription": "EIASS 사업을 평가유형·기관·지역·사업구분으로 검색하고, 사업개요·원문 미리보기·문서 검색·다운로드를 지원합니다.",
