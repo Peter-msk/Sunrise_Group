@@ -20,3 +20,8 @@
 @media(prefers-reduced-motion:reduce){
  .sg3-page .r28-workflow *{scroll-behavior:auto;transition:none!important;animation:none!important}
 }
+
+/* The former field-photo review group now contains only the owned QGIS catalog manager. */
+.sg3-page .r20-catalog .r19-atlas-group.r28-no-group-art .catalog-group-heading{grid-template-columns:minmax(0,1fr)}
+.sg3-page .r20-catalog .r19-atlas-group.r28-no-group-art .catalog-group-heading h3,
+.sg3-page .r20-catalog .r19-atlas-group.r28-no-group-art .catalog-group-heading p{grid-column:1}
