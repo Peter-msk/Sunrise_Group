@@ -70,7 +70,6 @@ const folder=process.env.SUNRISE_QA_ARTIFACT_DIR;
     await page.waitForFunction(()=>{const r=document.querySelector('#page-outlet #solutions')?.getBoundingClientRect();return r&&r.top<innerHeight&&r.bottom>0;});
     const top=await page.locator('#page-outlet #solutions').evaluate(e=>e.getBoundingClientRect().top);
     assert.ok(top>40,'primary CTA navigates past sticky header '+width+': '+top);
-    await page.locator('#page-outlet a.r33-catalogue-strip a').count(); // compatibility-safe no-op query (no selector side effects)
    }
    assert.deepEqual(errors,[],'no page runtime errors '+width);
    await context.close();
