@@ -1,0 +1,29 @@
+/* R33: verified-homepage-only UX and text legibility refinement. No changes to R32 page ownership. */
+.home-v2.r32-home #solutions,
+.home-v2.r32-home #purpose{scroll-margin-top:calc(var(--header,64px) + 16px)}
+.home-v2.r32-home .r33-catalogue-strip{display:flex;justify-content:space-between;align-items:center;gap:14px 28px;max-width:1280px;margin:clamp(20px,2.6vw,34px) auto 0;padding:17px 0 0;border-top:1px solid #cbd5cb}
+.home-v2.r32-home .r33-catalogue-strip p{margin:0!important;color:#526a5e;font-size:13px;line-height:1.75;word-break:keep-all}
+.home-v2.r32-home .r33-catalogue-strip a{display:inline-flex;align-items:center;justify-content:space-between;gap:22px;min-height:44px;padding:8px 14px;flex:0 0 auto;border:1px solid #446b59;border-radius:3px;color:#174b3a;font-size:13px;line-height:1.5;font-weight:750;text-decoration:none}
+.home-v2.r32-home .r33-catalogue-strip a:hover{background:#e0e9df}
+.home-v2.r32-home .r33-catalogue-strip a:focus-visible{outline:3px solid #b26a43;outline-offset:3px}
+.home-v2.r32-home .r32-hero-foot a{display:inline-flex;align-items:center;min-height:44px}
+.home-v2.r32-home .r32-hero-meta{font-size:12px}
+.home-v2.r32-home .r32-domain-figure figcaption{font-size:12px;line-height:1.6}
+.home-v2.r32-home .r32-values .r32-text-link,.home-v2.r32-home .r32-ethos .r32-text-link{min-height:44px;align-items:center}
+.home-v2.r32-home .r32-future a{display:inline-flex;align-items:center;min-height:44px}
+@media(max-width:760px){
+ .home-v2.r32-home .r32-section-intro>p{font-size:14px}
+ .home-v2.r32-home .r32-domain-copy p{font-size:14px;line-height:1.8}
+ .home-v2.r32-home .r32-values article p{font-size:13px;line-height:1.78}
+ .home-v2.r32-home .r33-catalogue-strip{align-items:flex-start;flex-direction:column;gap:10px}
+ .home-v2.r32-home .r33-catalogue-strip p{font-size:13px}
+ .home-v2.r32-home .r33-catalogue-strip a{font-size:13px}
+ .home-v2.r32-home .r32-hero-foot{gap:12px}
+}
+@media(max-width:400px){
+ .home-v2.r32-home .r32-hero-foot{align-items:flex-start}
+ .home-v2.r32-home .r32-hero-foot>a{min-width:0}
+ .home-v2.r32-home .r32-hero-foot .r19-cinema-links{min-width:0;flex-shrink:0}
+ .home-v2.r32-home .r32-hero-meta small{display:inline;letter-spacing:0;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.home-v2.r32-home .r33-catalogue-strip a{transition:none}}
