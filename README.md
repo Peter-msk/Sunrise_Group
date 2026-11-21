@@ -1,12 +1,20 @@
-# Sunrise Group — 공식 홈페이지 R29 A+B+D 디자인 보완
+# Sunrise Group — 공식 홈페이지 R30 A+B+D 디자인 2차 보완
 
 운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
 
 - 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 현재 운영 기준: R28
-- 개발 후보: R29 (branch `r29-three-theme-design-20261121`)
+- 현재 운영 기준: R29
+- 개발 후보: R30 (branch `r30-visual-coherence-audit-20261121`)
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
+
+## R30 디자인 2차 보완
+
+- 제품 선택 페이지(`/programs`)의 QGIS 오표기 `10개/개발 완료 7개`를 실제 소유 플러그인 `9개/개발 완료 6개/개발 중 3개`로 수정합니다.
+- PC 전체 16개 제품과 상태 확인 중 3개를 구분해 오해의 소지가 있는 표기를 정리합니다.
+- 홈 A+B+D 섹션과 다음 스토리의 간격을 정교하게 조정하고, 제품 선택 화면은 B 기술기업/D 공간정보 두 디자인을 일관되게 이어줍니다.
+- PC·QGIS 제품 상세의 작업 흐름 강조선을 제품군별로 맞추되 실제 기능·이미지·문구·배포 정책은 유지합니다.
+- 변경 영향만 검증하며 320~2560px 7개 폭·PC/모바일 실클릭·이미지 디코딩·상세 대표 페이지를 확인합니다. 문서: `docs/R30_DESIGN_SECOND_PASS.md`.
 
 ## R29 A+B+D 디자인 보완
 
