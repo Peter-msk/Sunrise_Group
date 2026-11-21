@@ -14,7 +14,7 @@ const productContract={
     ["image","Sunrise Image","버전 번호 미표기","정식 배포","배포 버전","버전 번호 미표기"],
     ["drawing-editor","Sunrise Drawing Editor","v1.1.0","정식 배포","배포 버전","v1.1.0"],
     ["eiass","Sunrise EIASS","v4.7.0","정식 배포","배포 버전","v4.7.0"],
-    ["finder","Sunrise Finder","개발 중지","개발 중지","개발 및 운영 상태","개발 중지"],
+    ["finder","Sunrise Finder","v2.1.2","개발 중지","개발 및 운영 상태","개발 중지"],
     ["eia-manager","EIA Manager","개발 중","개발 중","개발 및 운영 상태","개발 중"],
     ["pdf-editor-web","Sunrise PDF Editor Web","웹 서비스 운영 중","정식 배포","개발 및 운영 상태","웹 서비스 운영 중"],
     ["pdf-pro-web","Sunrise PDF PRO Web","웹 서비스 운영 중","정식 배포","개발 및 운영 상태","웹 서비스 운영 중"],
@@ -391,7 +391,11 @@ const productContract={
                 assert.ok(statusBox.includes('공개 링크 미확인')&&statusBox.includes('NOT RUN'),'QGIS runtime evidence limits');
               }else{
                 assert.equal(values[field],expectedValue,'detail fact '+field);
-                if(id==='finder'||id==='aermod')assert.equal(values['공개 상태'],'공개 미정');
+                if(id==='finder'){
+                  assert.equal(values['공개 상태'],'v2.1.2 공개 Release');
+                  assert.ok(clean(await page.locator('#page-outlet .status-box').innerText()).includes('v2.1.2 공개 Release'),'Finder last public release is visible');
+                }
+                if(id==='aermod')assert.equal(values['공개 상태'],'공개 미정');
                 if(id==='eia-hub'||id==='eia-manager')assert.equal(facts.length,2,'deduplicated development facts');
                 if(id.endsWith('-web'))assert.equal(values['이용 환경'],'웹 브라우저');
               }
