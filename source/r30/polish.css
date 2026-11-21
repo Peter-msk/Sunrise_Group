@@ -1,0 +1,39 @@
+/* Sunrise Group R30: second-pass A+B+D cohesion; scoped, additive, no external assets. */
+/* Home: keep the cinema scene and triad; remove redundant stack spacing before the editorial story. */
+.home-v2 .r29-triad{margin-bottom:clamp(36px,5.2vw,76px)}
+.home-v2 .r29-triad .r29-triad-content>span{font-size:clamp(13px,1.08vw,15px);line-height:1.72}
+.home-v2 .r29-triad .r29-triad-action{min-height:44px;align-items:center}
+.home-v2 .r29-triad .r29-triad-number span{font-size:11px;letter-spacing:.06em}
+/* Overview: a smaller editorial introduction brings the two genuinely distinct product lines into the first view. */
+.sg3-page.r19-portal-page>.inner-hero{min-height:0;padding-block:clamp(35px,5vw,72px) clamp(28px,3.6vw,50px)}
+.sg3-page.r19-portal-page .program-catalog{padding-top:clamp(18px,2.4vw,34px)}
+.sg3-page.r19-portal-page .r05-portal-grid{gap:clamp(12px,1.9vw,24px)}
+.sg3-page.r19-portal-page .r05-portal{min-width:0;overflow:hidden;border:1px solid #d0d9d3;border-top:3px solid transparent;border-radius:6px;transition:border-color .18s ease,box-shadow .18s ease}
+.sg3-page.r19-portal-page .r05-portal.r30-portal-pc{border-top-color:#b36b4b}
+.sg3-page.r19-portal-page .r05-portal.r30-portal-gis{border-top-color:#306c57}
+.sg3-page.r19-portal-page .r05-portal:hover{box-shadow:0 9px 28px #263c2d15}
+.sg3-page.r19-portal-page .r05-portal:focus-visible{outline:3px solid #bd7346;outline-offset:3px}
+.sg3-page.r19-portal-page .r30-portal-axis{display:block;margin:0 0 8px;font-size:11px;line-height:1.5;font-weight:800;letter-spacing:.115em;color:#a15837}
+.sg3-page.r19-portal-page .r30-portal-gis .r30-portal-axis{color:#286b55}
+.sg3-page.r19-portal-page .r05-portal b{display:block;margin-top:14px;font-size:clamp(12px,1.07vw,14px);line-height:1.65;font-weight:700;overflow-wrap:anywhere}
+.sg3-page.r19-portal-page .r05-portal h3{line-height:1.35;letter-spacing:-.025em}
+.sg3-page.r19-portal-page .r05-portal img{max-width:100%;height:auto}
+/* Product details: one shared typography system, distinct restrained domain accents. */
+main.sg3-product[data-design-family]{--r30-domain:#496d5e}
+main.sg3-product:is([data-design-family="document"],[data-design-family="utility"],[data-design-family="workspace"],[data-design-family="web"]){--r30-domain:#a26040}
+main.sg3-product:is([data-design-family="field"],[data-design-family="relief"],[data-design-family="cartography"],[data-design-family="catalog"]){--r30-domain:#2c705a}
+main.sg3-product[data-design-family] .r28-workflow{border-top:3px solid var(--r30-domain)}
+main.sg3-product[data-design-family] .r28-step-index{background:color-mix(in srgb,var(--r30-domain) 12%,white);color:var(--r30-domain)}
+main.sg3-product[data-design-family] .r19-product-jump a:focus-visible{outline:2px solid var(--r30-domain);outline-offset:3px}
+main.sg3-product[data-design-family] .r19-product-jump a:hover{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:760px){
+ .home-v2 .r29-triad{margin-bottom:35px}
+ .home-v2 .r29-triad .r29-triad-content>span{font-size:13px}
+ .sg3-page.r19-portal-page>.inner-hero{padding-block:29px 26px}
+ .sg3-page.r19-portal-page .program-catalog{padding-top:18px}
+ .sg3-page.r19-portal-page .r05-portal{border-radius:5px}
+ .sg3-page.r19-portal-page .r05-portal b{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+ .sg3-page.r19-portal-page .r05-portal{transition:none!important}
+}
