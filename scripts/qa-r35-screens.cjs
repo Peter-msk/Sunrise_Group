@@ -21,6 +21,7 @@ for(const m of list){
  assert.ok(page.includes('실제 실행 화면'),'true screenshot label '+m.route);
  assert.ok(page.includes('id="screens"'),'deep-linkable screenshot '+m.route);
  assert.ok(catalogue.includes('src="/assets/r35/'+m.file+'"'),'thumbnail in PC catalogue '+m.route);
+ assert.ok(new RegExp('class="catalog-line r07-real-preview [^"]*" href="#'+m.route+'"').test(catalogue),'real screenshot must be visible via R07 preview contract '+m.route);
  // Preserve separate, correctly labeled function-motion sections for existing real-image products.
  if(m.type==='scene')assert.ok(!page.includes('data-scene="'+m.route+'"'),'old concept hero scene replaced '+m.route);
 }
@@ -59,7 +60,9 @@ const shots=process.env.SUNRISE_QA_ARTIFACT_DIR;
       const url=e.getAttribute('src'),response=await fetch(url);
       if(!response.ok)return false;
       const bitmap=await createImageBitmap(await response.blob());
-      const valid=bitmap.width>=1100&&e.getAttribute('alt')?.length>10;
+      const holder=e.closest('.sg3-product-object'),rect=e.getBoundingClientRect();
+      const displayed=!!holder&&getComputedStyle(holder).display!=='none'&&rect.width>80&&rect.height>50;
+      const valid=bitmap.width>=1100&&e.getAttribute('alt')?.length>10&&displayed;
       bitmap.close();
       return valid;
     }),'catalogue real image bytes and accessible label '+width);
