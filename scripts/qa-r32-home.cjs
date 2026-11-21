@@ -80,6 +80,7 @@ const out=process.env.SUNRISE_QA_ARTIFACT_DIR;
    assert.deepEqual(result.themeAxis,['B','D'],'integrated B/D product focus at '+width);
    assert.ok(result.solar.width>220&&result.solar.height>160,'solar geometry '+width+': '+JSON.stringify(result.solar));
    assert.ok(result.solar.left>=-1&&result.solar.right<=width+2,'solar fits viewport '+width+': '+JSON.stringify(result.solar));
+   if(width===768)assert.ok(result.solar.top>=result.heroCopy.top+result.heroCopy.height-10,'tablet places solar after brand message');
    assert.ok(result.hero.height<1450,'no excessive first-fold hero '+width+': '+result.hero.height);
    assert.ok(result.twoProducts.every(x=>x.width>=250&&x.left>=-1&&x.right<=width+2),'domain bands fit '+width+': '+JSON.stringify(result.twoProducts));
    assert.equal(result.toolsOpen,false,'solar controls are compact by default '+width);
