@@ -1,7 +1,5 @@
 name: Portal candidate QA
 on:
-  push:
-    branches: [r28-portal-detail-performance-20261121]
   pull_request:
     branches: [main]
   workflow_dispatch:
