@@ -93,7 +93,7 @@ const productContract={
   const check=(condition,label)=>{if(!condition)failures.push(label);};
   try {
     browser=await chromium.launch({headless:true});
-    const planetMapMatch=htmlText.match(/const R15_PLANET_DATA=(\\{[\\s\\S]*?\\}),R15_PLANET_IMAGES=/);
+    const planetMapMatch=htmlText.match(/const R15_PLANET_DATA=(\{[\s\S]*?\}),R15_PLANET_IMAGES=/);
     assert.ok(planetMapMatch,'R15 solar texture manifest exists');
     const planetUrls=Object.values(JSON.parse(planetMapMatch[1]));
     assert.equal(planetUrls.length,9,'nine solar texture assets');
