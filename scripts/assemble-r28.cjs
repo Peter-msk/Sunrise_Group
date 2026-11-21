@@ -213,7 +213,10 @@ const uniqueAssetCount = assetByUri.size;
 check(dataUriOccurrences === 37 && uniqueAssetCount === 24, 'embedded image inventory changed; observed ' + dataUriOccurrences + ' references / ' + uniqueAssetCount + ' unique assets');
 
 let imageTags = 0;
-html = html.replace(/<img\b[^>]*>/gi, tag => {
+let eagerImages = 0;
+html = html.replace(/<template data-route="([^"]+)">([\s\S]*?)<\/template>/g, (template, route, content) => {
+  let firstImageInRoute = true;
+  const updatedContent = content.replace(/<img\b[^>]*>/gi, tag => {
   const src = (tag.match(/\bsrc="([^"]+)"/i) || [])[1];
   if (!src || !src.startsWith('/assets/r28/')) return tag;
   const asset = assetByUrl.get(src);
@@ -222,14 +225,24 @@ html = html.replace(/<img\b[^>]*>/gi, tag => {
   let next = tag;
   if (!/\bclass="/i.test(next)) next = next.replace('<img', '<img class="r28-optimized-image"');
   else next = next.replace(/\bclass="([^"]*)"/i, (m, value) => 'class="' + value + ' r28-optimized-image"');
-  if (!/\bloading="/i.test(next)) next = next.replace('<img', '<img loading="lazy"');
+  next = next.replace(/\sloading="[^"]*"/i, '');
+  if (firstImageInRoute) {
+    eagerImages++;
+    next = next.replace('<img', '<img loading="eager" fetchpriority="high"');
+  } else {
+    next = next.replace('<img', '<img loading="lazy"');
+  }
+  firstImageInRoute = false;
   if (!/\bdecoding="/i.test(next)) next = next.replace('<img', '<img decoding="async"');
   if (!/\bwidth="/i.test(next)) next = next.replace('<img', '<img width="' + asset.width + '"');
   if (!/\bheight="/i.test(next)) next = next.replace('<img', '<img height="' + asset.height + '"');
   return next;
+  });
+  return template.replace(content, updatedContent);
 });
 check(imageTags === 18, 'expected 18 optimized image tags, got ' + imageTags);
-check(!/data:image\/(?:png|jpeg|webp|gif);base64,/i.test(html), 'inline base64 image remains');
+check(eagerImages === 12, 'expected 12 route-leading eager images, got ' + eagerImages);
+check(!/data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]{128,}/i.test(html), 'inline base64 image payload remains');
 check((html.match(/<template data-route="/g) || []).length === 34, 'expected 34 final route templates');
 check((html.match(/<a class="catalog-line[^"]*" href="#\/projects\//g) || []).length === 25, 'expected 25 product catalogue cards');
 check(!html.includes('photo-classifier'), 'removed product route remains');
