@@ -1,7 +1,7 @@
 name: Portal candidate QA
 on:
   push:
-    branches: [site-detail-polish-20261120]
+    branches: [r28-portal-detail-performance-20261121]
   workflow_dispatch:
 permissions:
   contents: read
