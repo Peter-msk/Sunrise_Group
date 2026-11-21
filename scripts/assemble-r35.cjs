@@ -74,6 +74,10 @@ for(const m of list){
    row=row.replace(hook,image+hook);
   }
   ok(row.includes(image),'photo inserted '+m.route);
+  // R07 hides object previews unless explicitly classified as verified real capture.
+  // These seven cards now use user-supplied actual execution screenshots.
+  ok(row.startsWith('<a class="catalog-line '),'catalogue row root '+m.route);
+  row=row.replace('<a class="catalog-line ','<a class="catalog-line r07-real-preview ');
   return part.replace(card[0],row);
  });
 }
