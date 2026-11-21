@@ -93,6 +93,31 @@ const productContract={
   const check=(condition,label)=>{if(!condition)failures.push(label);};
   try {
     browser=await chromium.launch({headless:true});
+    const planetMapMatch=htmlText.match(/const R15_PLANET_DATA=(\\{[\\s\\S]*?\\}),R15_PLANET_IMAGES=/);
+    assert.ok(planetMapMatch,'R15 solar texture manifest exists');
+    const planetUrls=Object.values(JSON.parse(planetMapMatch[1]));
+    assert.equal(planetUrls.length,9,'nine solar texture assets');
+    const perfContext=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'});
+    const perfPage=await perfContext.newPage();
+    const planetResponses=new Map();
+    perfPage.on('response',response=>{
+      const pathname=new URL(response.url()).pathname;
+      if(planetUrls.includes(pathname))planetResponses.set(pathname,response.status());
+    });
+    await perfPage.goto(url+'#/projects/file-manager');
+    await perfPage.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/projects/file-manager');
+    await perfPage.waitForTimeout(250);
+    assert.equal(planetResponses.size,0,'unrelated product page does not fetch solar textures');
+    await perfPage.evaluate(()=>{location.hash='#/'});
+    await perfPage.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/');
+    const solarFigure=perfPage.locator('#page-outlet figure[data-scene="/"]');
+    assert.equal(await solarFigure.count(),1,'home solar scene exists');
+    await solarFigure.scrollIntoViewIfNeeded();
+    await perfPage.waitForFunction(urls=>urls.every(path=>performance.getEntriesByType('resource').some(entry=>new URL(entry.name).pathname===path)),planetUrls,{timeout:7000});
+    assert.equal(planetResponses.size,planetUrls.length,'all solar textures fetched only after home scene becomes visible');
+    assert.ok([...planetResponses.values()].every(status=>status===200),'all deferred solar textures return HTTP 200');
+    console.log('Performance: 9 solar textures deferred on unrelated pages; 9/9 loaded when home scene became visible.');
+    await perfContext.close();
     for(const width of [1440,390,320,768,1920,2560,3840]){
       const context=await browser.newContext({viewport:{width,height:width===3840?2160:width===2560?1440:width===1920?1080:width<761?844:900},reducedMotion:'reduce',isMobile:false,hasTouch:width<761});
       const page=await context.newPage();
