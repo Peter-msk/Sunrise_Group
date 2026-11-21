@@ -66,6 +66,11 @@ const productContract={
   assert.equal(pluginManagementGroup.includes('r19-group-art'),false,'non-owned field-photo group artwork removed');
   assert.match(qgisTemplate,/개발 완료 6개/);
   assert.match(qgisTemplate,/개발 중 3개/);
+  const drawingTemplate=(htmlText.match(/<template data-route="\\/projects\\/drawing-editor">([\\s\\S]*?)<\\/template>/)||[])[1];
+  assert.ok(drawingTemplate,'Drawing Editor detail route exists');
+  assert.match(drawingTemplate,/DWG/,'Drawing Editor DWG input is documented');
+  assert.match(drawingTemplate,/ODA File Converter/,'Drawing Editor external DWG dependency is disclosed');
+  assert.match(drawingTemplate,/DWG 지원 LibreCAD/,'Drawing Editor alternate DWG dependency is disclosed');
   assert.equal((htmlText.match(/class="r28-workflow"/g)||[]).length,25,'all product details have workflow sections');
   const routes = [...htmlText.matchAll(/<template data-route="([^"]+)"/g)].map(m => m[1]);
   assert.equal(routes.length,34);
