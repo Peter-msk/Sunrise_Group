@@ -11,19 +11,19 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - name: R36 focused solar performance build and syntax
+      - name: R37 cached runtime build and syntax
         run: |
           node --version
           node --check scripts/assemble-r36.cjs
-          node --check scripts/assemble-r35.cjs
-          node --check scripts/qa-r36-performance.cjs
+          node --check scripts/assemble-r37.cjs
+          node --check scripts/qa-r37-runtime.cjs
           npm run build
       - name: Install isolated browser test dependency
         run: |
           npm install --prefix "$RUNNER_TEMP/sunrise-qa" --no-package-lock --no-audit --no-fund playwright@1.51.1
           "$RUNNER_TEMP/sunrise-qa/node_modules/.bin/playwright" install --with-deps chromium
-      - name: R36 changed-impact solar visibility plus representative product browser QA
+      - name: R37 changed-impact cached runtime and representative responsive browser QA
         env:
           NODE_PATH: ${{ runner.temp }}/sunrise-qa/node_modules
         run: |
-          node scripts/qa-r36-performance.cjs
+          node scripts/qa-r37-runtime.cjs
