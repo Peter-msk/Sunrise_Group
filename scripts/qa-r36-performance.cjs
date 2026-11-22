@@ -2,6 +2,7 @@
 // Focused R36 gate. Earlier R35 full screenshot/browser QA is not rerun here.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),http=require('node:http');
 const {chromium}=require('playwright');
+const cp=require('node:child_process');
 const root=path.resolve(__dirname,'..'),pub=path.join(root,'public');
 const html=fs.readFileSync(path.join(pub,'index.html'),'utf8');
 const headers=fs.readFileSync(path.join(pub,'_headers'),'utf8');
@@ -13,6 +14,10 @@ assert.ok(/\/assets\/r35\/\*\s*\n\s*Cache-Control: public, max-age=3600, stale-w
  'R35 real screenshot caching must be bounded (not immutable)');
 assert.equal((html.match(/<template data-route="/g)||[]).length,34);
 assert.equal((html.match(/class="r28-workflow" id="workflow"/g)||[]).length,25);
+assert.ok(headers.includes('X-Content-Type-Options: nosniff'),'disable MIME sniffing on static assets');
+assert.equal(cp.execFileSync('git',['check-ignore','--no-index','public/assets/r35/generated.webp'],
+ {cwd:root,encoding:'utf8'}).trim(),'public/assets/r35/generated.webp',
+ 'generated R35 assets must be ignored by Git');
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'source','r35','screenshots.json'),'utf8')).screenshots;
 assert.equal(manifest.length,7);
 const start=html.indexOf('const R15_PLANET_DATA='),begin=html.indexOf('{',start),end=html.indexOf('},R15_PLANET_IMAGES=',begin);
