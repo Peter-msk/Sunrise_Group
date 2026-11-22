@@ -15,3 +15,6 @@
 
 /assets/r37/*
   Cache-Control: public, max-age=31536000, immutable
+
+/assets/r38/*
+  Cache-Control: public, max-age=31536000, immutable

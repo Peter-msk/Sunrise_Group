@@ -11,19 +11,19 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - name: R37 cached runtime build and syntax
+      - name: R38 lazy graphics build and syntax
         run: |
           node --version
-          node --check scripts/assemble-r36.cjs
+          node --check scripts/assemble-r38.cjs
           node --check scripts/assemble-r37.cjs
-          node --check scripts/qa-r37-runtime.cjs
+          node --check scripts/qa-r38-fallback.cjs
           npm run build
       - name: Install isolated browser test dependency
         run: |
           npm install --prefix "$RUNNER_TEMP/sunrise-qa" --no-package-lock --no-audit --no-fund playwright@1.51.1
           "$RUNNER_TEMP/sunrise-qa/node_modules/.bin/playwright" install --with-deps chromium
-      - name: R37 changed-impact cached runtime and representative responsive browser QA
+      - name: R38 context-loss, fallback and responsive browser QA
         env:
           NODE_PATH: ${{ runner.temp }}/sunrise-qa/node_modules
         run: |
-          node scripts/qa-r37-runtime.cjs
+          node scripts/qa-r38-fallback.cjs
