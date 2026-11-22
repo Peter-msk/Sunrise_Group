@@ -8,3 +8,6 @@
   Cache-Control: public, max-age=0, must-revalidate
 /index.html
   Cache-Control: public, max-age=0, must-revalidate
+
+/assets/r35/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
