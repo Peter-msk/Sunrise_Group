@@ -14,10 +14,13 @@ if(count!==1)throw new Error('R36 solar initial-preload contract changed: '+coun
 const html=before.replace(eager,lazy);
 if(!html.includes("if(visible){preloadPlanetTextures();requestPaint();schedule();}"))
  throw new Error('R36 solar visibility-triggered loading guard missing');
-const main=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)]
- .filter(x=>x[1].includes('function sg3Render(figure)'));
-if(main.length!==1)throw new Error('R36 solar renderer count changed');
-new vm.Script(main[0][1],{filename:'sunrise-r36-render.js'});
+const rendererAt=html.indexOf('function sg3Render(figure)');
+const scriptOpen=html.lastIndexOf('<script',rendererAt);
+const scriptBodyStart=html.indexOf('>',scriptOpen)+1;
+const scriptClose=html.indexOf('</script>',rendererAt);
+if(rendererAt<0||scriptOpen<0||scriptBodyStart<=scriptOpen||scriptClose<rendererAt)
+ throw new Error('R36 solar renderer script boundary missing');
+new vm.Script(html.slice(scriptBodyStart,scriptClose),{filename:'sunrise-r36-render.js'});
 const times=re=>(html.match(re)||[]).length;
 if(times(/<template data-route="/g)!==34||times(/class="r28-workflow" id="workflow"/g)!==25||
    times(/class="r31-workflow-jump"/g)!==25||times(/class="r32-solar-tools"/g)!==1||
