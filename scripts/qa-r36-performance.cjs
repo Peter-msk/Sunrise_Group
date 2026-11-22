@@ -43,6 +43,10 @@ const server=http.createServer((req,res)=>{
   const page=await ctx.newPage(),errors=[],planetRequests=[];
   page.on('pageerror',e=>errors.push(e.message));
   page.on('request',r=>{if(planetUrls.has(new URL(r.url()).pathname))planetRequests.push(r.url());});
+  await page.goto(base+'#/programs/pc',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/programs/pc');
+  await page.waitForTimeout(150);
+  assert.equal(planetRequests.length,0,'non-home catalogue must never preload solar textures '+width);
   await page.goto(base+'#/',{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/');
   const scene=page.locator('#page-outlet .r23-stage');
@@ -56,6 +60,9 @@ const server=http.createServer((req,res)=>{
   await scene.scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>document.querySelector('#page-outlet .r23-stage')?.closest('figure')?.dataset.r15PlanetPreloadRequested==='true');
   assert.ok(planetRequests.length>0,'visible solar starts texture requests '+width);
+  await page.waitForFunction(()=>document.querySelector('#page-outlet .r23-stage')?.closest('figure')?.dataset.planetTexturesReady==='true');
+  assert.equal(new Set(planetRequests.map(u=>new URL(u).pathname)).size,planetUrls.size,
+   'visible solar loads all nine expected textures exactly as source manifest '+width);
   await page.goto(base+'#/projects/cleaner',{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>document.querySelector('#page-outlet')?.dataset.route==='/projects/cleaner');
   const img=page.locator('#page-outlet #screens img[src^="/assets/r35/"]');
