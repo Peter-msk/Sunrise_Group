@@ -5,6 +5,7 @@ node_modules/
 !.env.example
 /public/index.html
 /public/assets/r28/
+/public/assets/r35/
 /public/*.html
 /public/.index-*.tmp
 /dist/
