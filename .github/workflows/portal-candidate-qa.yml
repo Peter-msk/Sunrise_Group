@@ -30,3 +30,19 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/sunrise-qa/node_modules
         run: |
           node scripts/qa-r38-fallback.cjs
+      - name: Archive tracked source checkpoint
+        if: startsWith(github.head_ref, 'closeout/') || github.event_name == 'workflow_dispatch'
+        run: |
+          mkdir -p "$RUNNER_TEMP/sunrise-source"
+          git archive --format=tar HEAD | tar -xf - -C "$RUNNER_TEMP/sunrise-source"
+          git rev-parse HEAD > "$RUNNER_TEMP/sunrise-source/CHECKPOINT_COMMIT.txt"
+          git rev-parse HEAD^{tree} >> "$RUNNER_TEMP/sunrise-source/CHECKPOINT_COMMIT.txt"
+      - name: Upload source checkpoint
+        if: startsWith(github.head_ref, 'closeout/') || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Sunrise_Group_WEB_R39
+          path: ${{ runner.temp }}/sunrise-source/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
