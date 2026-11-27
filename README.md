@@ -1,12 +1,18 @@
-# Sunrise Group — 공식 홈페이지 R38
+# Sunrise Group — 공식 홈페이지 R39
 
 운영 Worker: `sunrise-group` · Production branch: `main`
 
 - 운영 주소: https://sunrise-group.ko-pg.workers.dev
-- 소스 기준 버전: R38 (운영 버전 13 유지)
-- 운영 기준 커밋: `ac18e47` (R38)
+- 소스 기준 버전: R39 (R38 + 주소 정리)
+- Parent baseline: `e0e9f33` (R38 주소 동기화)
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
+
+## R39 URL 정리 (2026-11-27)
+
+- 홈페이지 초기 로드 시 `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `utm_source_platform`, `utm_creative_format`, `utm_marketing_tactic`만 제거합니다. 기존 URL hash, 다른 query 값 및 history state를 유지합니다.
+- `source/r39/clean-url.js` 단일 원본을 빌드 시 head에 삽입합니다. R38 디자인/라우트/자산은 유지합니다.
+- `npm run build` 후 `node scripts/qa-r39-url.cjs`로 변경 영향을 확인합니다.
 
 ## R38 운영 주소 변경 (2026-11-27)
 
