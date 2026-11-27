@@ -2,7 +2,7 @@
   "name": "sunrise-group",
   "private": true,
   "scripts": {
-    "build": "node scripts/assemble-r38.cjs",
+    "build": "node scripts/assemble-r39.cjs",
     "predeploy": "npm run build",
     "deploy": "npx --yes cf@1.0.0-rc.1 deploy ./public --force"
   },
