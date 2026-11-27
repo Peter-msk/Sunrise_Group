@@ -7,7 +7,7 @@
 - Parent baseline: `e0e9f3314f366a90e790126eb9acdba148de1308` (R38 주소 동기화)
 - R39 PR: https://github.com/Peter-msk/Sunrise_Group/pull/14
 - CI run: https://github.com/Peter-msk/Sunrise_Group/actions/runs/45923796024 — success
-- Cloudflare Worker: `sunrise-group`, version 14, version ID `1cfcc46c-401c-4422-ba44-600859d1f5e4`, deployment `835ed796-81e7-49c2-95c8-2640f5a15b`, 100% traffic.
+- Cloudflare Worker: `sunrise-group`, version 14, version ID `1cfcc46c-401c-4422-ba44-600859d1f5e4`, deployment `835ed796-81e7-49c2-95c8-2640f0a5e15b`, 100% traffic.
 - 이전 복구 버전: 13, `c29d1f99-2ec2-4b80-b57e-e325e7f22de4`.
 
 ## 변경 및 검증
