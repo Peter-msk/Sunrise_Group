@@ -1,5 +1,5 @@
 {
-  "name": "sg-portal-8e4c71b9",
+  "name": "sunrise-group",
   "private": true,
   "scripts": {
     "build": "node scripts/assemble-r38.cjs",
