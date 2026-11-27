@@ -2,7 +2,7 @@ import { defineConfig } from "cf/config";
 
 export default defineConfig({
   worker: {
-    name: "sg-portal-8e4c71b9",
+    name: "sunrise-group",
     compatibilityDate: "2026-11-17",
     workersDev: true,
     previewUrls: false,

@@ -1,12 +1,19 @@
-# Sunrise Group — 공식 홈페이지 R35 사용자 제공 실기화면 적용
+# Sunrise Group — 공식 홈페이지 R38
 
-운영 Worker: `sg-portal-8e4c71b9` · Production branch: `main`
+운영 Worker: `sunrise-group` · Production branch: `main`
 
-- 운영 주소: https://sg-portal-8e4c71b9.ko-pg.workers.dev
-- 소스 기준 버전: R35 (실제 배포 성공 여부는 Cloudflare 운영 검증 기준)
-- 최종 후보 브랜치: `r35-actual-product-screenshots-20261122`
+- 운영 주소: https://sunrise-group.ko-pg.workers.dev
+- 소스 기준 버전: R38 (운영 버전 13 유지)
+- 운영 기준 커밋: `ac18e47` (R38)
 - 원본 기준본: R25 immutable source parts + R27 overlay
 - 제품 소개 정책: PC 프로그램 및 QGIS 플러그인 소개 전용. 설치파일·직접 배포 링크를 홈페이지에서 제공하지 않는다.
+
+## R38 운영 주소 변경 (2026-11-27)
+
+- 기존 Worker를 동일 고유 ID에서 `sunrise-group`으로 변경했습니다. 기존 R38 배포 버전 `c29d1f99-2ec2-4b80-b57e-e325e7f22de4` 및 100% 트래픽을 유지합니다.
+- 새 주소: https://sunrise-group.ko-pg.workers.dev. 이전 임시 주소는 운영 주소로 사용하지 않습니다.
+- 별도 도메인 구매, 앱 코드 변경 또는 재배포 없이 이름과 배포 설정만 동기화합니다.
+- `npm run build`는 R38 조립 스크립트를 사용합니다. 공개 HTTP 실접속 검증은 Cloudflare 설정 확인과 별도입니다.
 
 ## R35 실제 프로그램 화면 적용
 
@@ -101,6 +108,6 @@ node scripts/qa-r34-source.cjs
 
 ## 배포
 
-Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R34 최종 소스 빌드를 실행하여 생성된 `public/index.html`과 정적 이미지를 기존 Worker에 배포한다. GitHub에는 생성 HTML과 파생 이미지를 저장하지 않는다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
+Cloudflare Workers Static Assets를 사용한다. `npm run deploy`는 `predeploy`에서 R38 최종 소스 빌드를 실행하여 생성된 `public/index.html`과 정적 이미지를 기존 Worker에 배포한다. GitHub에는 생성 HTML과 파생 이미지를 저장하지 않는다. Cloudflare 인증 및 운영 배포 권한이 필요하다.
 
-R34 소스는 CI 성공 후 GitHub main 병합, Cloudflare Workers Static Assets 배포, 운영 URL 확인 순으로 확정합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
+소스 변경은 CI 성공 후 GitHub main 병합, Cloudflare Workers Static Assets 배포, 운영 URL 확인 순으로 확정합니다. 다른 Sunrise 제품 저장소와 Worker는 변경하지 않습니다.
